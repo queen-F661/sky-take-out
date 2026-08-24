@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
+// 读取 yml 配置文件，自动把配置的值注入到这个类的成员变量
 @ConfigurationProperties(prefix = "sky.jwt")
 @Data
 public class JwtProperties {

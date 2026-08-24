@@ -1,0 +1,14 @@
+**/target/
+.idea
+*.iml
+*.class
+*Test.java
+**/test/
+
+
+#**/target/	忽略所有模块的 Maven 构建产物目录（每个子模块 sky-common/sky-pojo/sky-server 下都会生成）
+#.idea	忽略 IntelliJ IDEA 的项目配置文件夹
+#*.iml	忽略 IDEA 给每个模块生成的 .iml 工程文件
+#*.class	忽略编译产物（即使 target 漏配也能兜底）
+#*Test.java	忽略测试源码（配合 **/test/ 一起用）
+#**/test/	忽略所有 src/test 目录
