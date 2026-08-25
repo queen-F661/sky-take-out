@@ -116,6 +116,12 @@
             <artifactId>poi-ooxml</artifactId>
         </dependency>
 
+        <!--  swagger的框架      -->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-spring</artifactId>
+            <version>3.0.2</version>
+        </dependency>
     </dependencies>
 
     <build>
