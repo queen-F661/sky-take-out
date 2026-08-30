@@ -80,6 +80,7 @@ public class EmployeeController {
     @ApiOperation(value = "增加员工")
     @PostMapping
     public Result<String> save(@RequestBody EmployeeDTO employeeDTO){
+        System.out.println("当前线程的id:" + Thread.currentThread().getId());
         log.info("增加员工{}",employeeDTO);
 
         // 在把数据丢给service  叫service来进行添加数据

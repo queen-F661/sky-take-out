@@ -18,11 +18,12 @@ public class GlobalExceptionHandler {
 
     /**
      * 捕获业务异常
+     *
      * @param ex
      * @return
      */
     @ExceptionHandler
-    public Result exceptionHandler(BaseException ex){
+    public Result exceptionHandler(BaseException ex) {
         log.error("异常信息：{}", ex.getMessage());
         return Result.error(ex.getMessage());
     }
@@ -43,9 +44,11 @@ public class GlobalExceptionHandler {
             // 因为这个名称是在第三段  根据下标是从0开始  那么下标为2
             String username = split[2];
             String msg = username + MessageConstant.ALREADY_EXISTS;
-            return Result.success(msg);
+            log.info("{}",msg);
+            // 因为这个是异常处理  肯定是报错信息
+            return Result.error(msg);
         }else {
-            return Result.success(MessageConstant.UNKNOWN_ERROR);
-        }
-    }
+            return Result.error(MessageConstant.UNKNOWN_ERROR);
+         }
+       }
 }
