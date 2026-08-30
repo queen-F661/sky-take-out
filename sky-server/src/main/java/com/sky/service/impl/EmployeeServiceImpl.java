@@ -107,7 +107,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         // 设置密码 因为前端没有传递密码,只能先是一个默认的密码
         // 要使用MD5进行加密
-        employee.setPassword( DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
+        employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
 
         // 设置创建时间和更新时间
         employee.setCreateTime(LocalDateTime.now());
