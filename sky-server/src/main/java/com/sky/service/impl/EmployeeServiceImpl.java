@@ -1,16 +1,21 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
+import com.sky.dto.EmployeePageQueryDTO;
+import com.sky.entity.Category;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
+import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -19,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -130,5 +136,46 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 在把当前这个对象传递给Mapper
         // 让mapper端进行
         employeeMapper.save(employee);
+    }
+
+    @Override
+    public PageResult pageList(EmployeePageQueryDTO employeePageQueryDTO) {
+////        // 先计算当前的起始位置
+////        // 首先  这个是String类型,先转成Int类型
+////        Integer pageNum = Integer.parseInt(String.valueOf(employeePageQueryDTO.getPage()));
+////        Integer pageSizeNum = Integer.parseInt(String.valueOf(employeePageQueryDTO.getPageSize()));
+//        int pageNum = employeePageQueryDTO.getPage();
+//        int pageSizeNum = employeePageQueryDTO.getPageSize();
+//        //在通过计算出当前的页码起始位置
+//        Integer beginIndex = (pageNum - 1) * pageSizeNum;
+//
+//        // 在把数据传递给mapper端进行sql的操作
+//        List<Employee> employees = employeeMapper.pageList(beginIndex,pageSizeNum,employeePageQueryDTO.getName());
+//
+//        Long total = employeeMapper.count();
+//
+//        PageResult pageResult = new PageResult(total,employees);
+//
+//        return pageResult;
+
+        // 老师教的
+        // 首先使用pageHelper 来进行存入
+
+        // select * from employee limit 0,10
+        // 他会动态的放入进去
+        // 开始分页查询
+
+        // 这个的作用就是告诉pageHelper下一条Mapper语句需要分页查询
+        //
+        PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
+
+        Page<Employee> page = employeeMapper.pageQuery(employeePageQueryDTO);
+
+        // 这个是总数
+        long total = page.getTotal();
+        // 这个是获取当前的值
+        List<Employee> result = page.getResult();
+
+        return new PageResult(total,result);
     }
 }

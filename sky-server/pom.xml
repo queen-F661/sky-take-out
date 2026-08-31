@@ -122,6 +122,13 @@
             <artifactId>knife4j-spring</artifactId>
             <version>3.0.2</version>
         </dependency>
+
+        <!-- pageHelper框架的编写  简化分页查询 -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.4.7</version>
+        </dependency>
     </dependencies>
 
     <build>
