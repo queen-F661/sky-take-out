@@ -101,4 +101,18 @@ public class EmployeeController {
 
         return Result.success(pageResult);
     }
+
+    /**
+     * 员工状态控制
+     * Result 你如果有数据返回给前端  那这个泛型你必须填进去,因为这个是代表当前数据这个字段的数据类型 只能xiangy
+     * */
+    @ApiOperation(value = "启用警用员工账号")
+    @PostMapping("status/{status}")
+    public Result<String> StartStop(@PathVariable Integer status,Long id){
+        log.info("传递的值状态{},id值为{}",status,id);
+        employeeService.StartStop(status,id);
+        return Result.success();
+    }
+
+
 }

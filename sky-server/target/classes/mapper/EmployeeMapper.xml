@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sky.mapper.EmployeeMapper">
-<!--    <select id="pageList" resultType="com.sky.entity.Employee">-->
+    <!--    <select id="pageList" resultType="com.sky.entity.Employee">-->
 <!--        select * from employee-->
 <!--        <where>-->
 <!--            <if test="name != null and name != '' ">-->
@@ -19,4 +19,14 @@
             </if>
         </where>
     </select>
+    <!-- 员工状态控制 -->
+    <update id="update">
+        update employee
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

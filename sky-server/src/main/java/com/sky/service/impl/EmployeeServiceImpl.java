@@ -178,4 +178,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         return new PageResult(total,result);
     }
+
+    @Override
+    public void StartStop(Integer status, Long id) {
+
+        // 首先 为了这个扩张性  可以先在这个里面创建一个实体类
+        // 通过这个实体类来进行数据的修改  防止以后需求修改的需求
+        Employee build = Employee.builder()
+                .id(id)
+                .status(status)
+                .build();
+
+        // 通过这个可以传入到mapper  动态的处理修改内容
+        employeeMapper.update(build);
+    }
 }
