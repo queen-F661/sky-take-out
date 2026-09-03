@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -191,5 +192,40 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         // 通过这个可以传入到mapper  动态的处理修改内容
         employeeMapper.update(build);
+    }
+
+    /**
+     * 数据回显
+     * */
+    @Override
+    public Employee getById(Long id) {
+        // 直接根据当前的id查询 在传递会给前端
+        Employee employee =  employeeMapper.getById(id);
+        // 但是这边需要处理一下  就是这个密码  处理完成之后在给他手动修改成一个字符串
+        // 为了防止别人入侵 来拿到密码
+        employee.setPassword("***");
+
+        return employee;
+    }
+
+    @Override
+    public void Update(EmployeeDTO employeeDTO) {
+        // 因为这个DTO传递不完整
+        Employee employee = new Employee();
+
+        // 复制
+        // 把前端传递过来的employeeDTO 里面的数据传递到employee里面
+        BeanUtils.copyProperties(employeeDTO,employee);
+
+        // 因为这个数据填的不完整  还需要手动的进行传入
+
+        // 一个是这个时间
+        employee.setUpdateTime(LocalDateTime.now());
+        // 还有更新人
+        // 因为这个更新人的id有专门的类给他解析出来  直接往里面传入就行
+        // 通过这个类直接通过线程里面的一个空间去拿  ThreadLocal
+        employee.setUpdateUser(BaseContext.getCurrentId());
+
+        employeeMapper.update(employee);
     }
 }

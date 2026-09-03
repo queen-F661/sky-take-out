@@ -114,5 +114,27 @@ public class EmployeeController {
         return Result.success();
     }
 
+    /**
+     * 修改  数据回显
+     * */
+    @ApiOperation(value = "数据回显")
+    @GetMapping("/{id}")
+    public Result<Employee> getById(@PathVariable Long id){
+        log.info("数据回显返回的id值{}",id);
+        Employee employee = employeeService.getById(id);
+        return Result.success(employee);
+    }
 
+    /**
+     * 编辑用户
+     */
+
+    @ApiOperation(value = "编辑用户")
+    @PutMapping
+    public Result<Object> Update(@RequestBody EmployeeDTO employeeDTO){
+        // 上面有一个status 是专门用来更新数据的
+        // 这个是动态sql  看有没有值 如果有值就加入
+        employeeService.Update(employeeDTO);
+        return Result.success();
+    }
 }

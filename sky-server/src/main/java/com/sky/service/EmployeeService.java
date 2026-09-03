@@ -29,4 +29,11 @@ public interface EmployeeService {
      * 员工状态控制
      * */
     void StartStop(Integer status, Long id);
+
+    /**
+     * 数据回显
+     * */
+    Employee getById(Long id);
+
+    void Update(EmployeeDTO employeeDTO);
 }
