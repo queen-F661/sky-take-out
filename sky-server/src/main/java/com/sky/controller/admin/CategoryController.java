@@ -1,5 +1,6 @@
 package com.sky.controller.admin;
 
+import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
@@ -46,6 +47,19 @@ public class CategoryController {
         // 首先启动禁用不需要传递给前端
         log.info("启动,禁用分类{},{}",status,id);
         categoryService.startStop(status,id);
+        return Result.success();
+    }
+
+    /**
+     * 修改分类
+     * */
+    @PutMapping
+    @ApiOperation("修改分类")
+    public Result update(@RequestBody CategoryDTO categoryDTO){
+        log.info("修改分类{}",categoryDTO);
+
+        categoryService.update(categoryDTO);
+
         return Result.success();
     }
 }
