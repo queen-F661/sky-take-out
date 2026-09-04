@@ -34,4 +34,19 @@ public class CategoryServiceImpl implements CategoryService {
         List<Category> result = pageHelper.getResult();
         return new PageResult(total,result);
     }
+
+    @Override
+    public void startStop(Integer status , Long id) {
+        // 这个为了扩张  创建一个类  通过这个类来写动态sql  下次遇到更新可以直接调用
+//        Category category = new Category();
+//
+//        category.setId(id);
+//        category.setStatus(status);
+          Category build = Category.builder()
+                .id(id)
+                .status(status)
+                .build();
+
+          categoryMapper.update(build);
+    }
 }

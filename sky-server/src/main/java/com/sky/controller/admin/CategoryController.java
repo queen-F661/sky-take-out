@@ -6,6 +6,7 @@ import com.sky.result.Result;
 import com.sky.service.CategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -33,19 +34,18 @@ public class CategoryController {
 
         PageResult pageList = categoryService.pageList(categoryPageQueryDTO);
 
-
         return Result.success(pageList);
     }
 
     /**
      * 启用禁用分类
      * */
-//    @PostMapping("status/{status}")
-//    @ApiOperation("启用,禁用分类")
-//    public Result StartStop(@PathVariable Long status , Long id){
-//        // 首先启动禁用不需要传递给前端
-//        log.info("启动,禁用分类{},{}",status,id);
-//
-//        return Result.success();
-//    }
+    @PostMapping("/status/{status}")
+    @ApiOperation("启用,禁用分类")
+    public Result StartStop(@PathVariable Integer status , Long id){
+        // 首先启动禁用不需要传递给前端
+        log.info("启动,禁用分类{},{}",status,id);
+        categoryService.startStop(status,id);
+        return Result.success();
+    }
 }

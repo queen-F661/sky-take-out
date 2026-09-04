@@ -14,4 +14,9 @@ public interface CategoryMapper {
      * */
     // @Select("select * from category where name = #{name} and type = #{type}")
     List<Category> getList(CategoryPageQueryDTO categoryPageQueryDTO);
+
+    /**
+     * 更新数据
+     * */
+    void update(Category build);
 }
