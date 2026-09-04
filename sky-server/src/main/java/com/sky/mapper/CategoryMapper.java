@@ -2,6 +2,7 @@ package com.sky.mapper;
 
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -16,7 +17,14 @@ public interface CategoryMapper {
     List<Category> getList(CategoryPageQueryDTO categoryPageQueryDTO);
 
     /**
-     * 更新数据
+     * 更新分类
      * */
     void update(Category build);
+
+    /**
+     * 创建分类
+     * */
+    @Insert("INSERT INTO category(type, name, sort, status, create_time, update_time, create_user, update_user) " +
+            "values (#{type},#{name},#{sort},#{status},#{createTime},#{updateTime},#{createUser},#{updateUser})")
+    void save(Category category);
 }

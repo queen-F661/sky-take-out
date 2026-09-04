@@ -69,5 +69,30 @@ public class CategoryServiceImpl implements CategoryService {
         categoryMapper.update(category);
     }
 
+    @Override
+    public void save(CategoryDTO categoryDTO) {
+
+        // 先把数据取出来 放到一个完整的数据表对于的类 entity
+        Category category = new Category();
+
+        // 把当前从数据库取出来的数据放到category
+        BeanUtils.copyProperties(categoryDTO,category);
+
+        // 在把基础的字段  默认的填进去
+        // 开店 默认为关闭的  所以save这个字段设置为0
+        category.setStatus(0);
+
+        // 默认设置当前时间
+        category.setCreateTime(LocalDateTime.now());
+        category.setUpdateTime(LocalDateTime.now());
+
+        // 设置当前创建人和更新人为的id为当前登录的用户
+        category.setCreateUser(BaseContext.getCurrentId());
+        category.setUpdateUser(BaseContext.getCurrentId());
+
+        // 在把这个对象传递给mapper端 更新数据
+        categoryMapper.save(category);
+    }
+
 
 }

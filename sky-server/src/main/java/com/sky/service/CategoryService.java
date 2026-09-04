@@ -20,4 +20,9 @@ public interface CategoryService {
      * 修改分类
      * */
     void update(CategoryDTO categoryDTO);
+
+    /**
+     * 新增分类
+     * */
+    void save(CategoryDTO categoryDTO);
 }
