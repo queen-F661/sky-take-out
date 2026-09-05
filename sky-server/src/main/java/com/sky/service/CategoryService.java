@@ -25,4 +25,9 @@ public interface CategoryService {
      * 新增分类
      * */
     void save(CategoryDTO categoryDTO);
+
+    /**
+     * 根据id删除
+     * */
+    void delete(Long id);
 }
