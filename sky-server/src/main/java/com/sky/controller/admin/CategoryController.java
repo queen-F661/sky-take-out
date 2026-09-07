@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api("分类查询相关接口")
+@Api(tags = "分类查询相关接口")
 @RequestMapping("/admin/category")
 @RestController
 @Slf4j

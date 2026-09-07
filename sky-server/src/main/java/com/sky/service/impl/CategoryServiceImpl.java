@@ -2,6 +2,7 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
@@ -71,8 +72,8 @@ public class CategoryServiceImpl implements CategoryService {
         BeanUtils.copyProperties(categoryDTO,category);
 
         // 手动修改更新时间和修改人
-        category.setUpdateTime(LocalDateTime.now());
-        category.setUpdateUser(BaseContext.getCurrentId());
+        // category.setUpdateTime(LocalDateTime.now());
+        // category.setUpdateUser(BaseContext.getCurrentId());
 
         // 在把这个category传递过Mapper端
         categoryMapper.update(category);
@@ -92,12 +93,12 @@ public class CategoryServiceImpl implements CategoryService {
         category.setStatus(0);
 
         // 默认设置当前时间
-        category.setCreateTime(LocalDateTime.now());
-        category.setUpdateTime(LocalDateTime.now());
+        // category.setCreateTime(LocalDateTime.now());
+        // category.setUpdateTime(LocalDateTime.now());
 
         // 设置当前创建人和更新人为的id为当前登录的用户
-        category.setCreateUser(BaseContext.getCurrentId());
-        category.setUpdateUser(BaseContext.getCurrentId());
+        // category.setCreateUser(BaseContext.getCurrentId());
+        // category.setUpdateUser(BaseContext.getCurrentId());
 
         // 在把这个对象传递给mapper端 更新数据
         categoryMapper.save(category);
@@ -111,10 +112,10 @@ public class CategoryServiceImpl implements CategoryService {
 
         // 只要有关联数据，就不允许删除，抛业务异常给前端提示
         if (dishCount != null && dishCount > 0) {
-            throw new DeletionNotAllowedException("当前分类关联了菜品，不能删除");
+            throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_DISH);
         }
         if (setmealCount != null && setmealCount > 0) {
-            throw new DeletionNotAllowedException("当前分类关联了套餐，不能删除");
+            throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_SETMEAL);
         }
 
         // 没有关联数据，才真正执行删除

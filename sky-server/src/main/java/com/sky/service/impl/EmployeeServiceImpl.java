@@ -120,18 +120,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
 
         // 设置创建时间和更新时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
+        // employee.setCreateTime(LocalDateTime.now());
+        // employee.setUpdateTime(LocalDateTime.now());
 
         // 设置当前创建人的id和修改人的id
         // 从ThreadLocal中获取当前的id
-        System.out.println("当前线程的id:" + Thread.currentThread().getId());
-        Long currentId = BaseContext.getCurrentId();
+        // System.out.println("当前线程的id:" + Thread.currentThread().getId());
+        // Long currentId = BaseContext.getCurrentId();
 
-        if(currentId !=null){
-            employee.setCreateUser(currentId);
-            employee.setUpdateUser(currentId);
-        }
+//        if(currentId !=null){
+//            employee.setCreateUser(currentId);
+//            employee.setUpdateUser(currentId);
+//        }
 
         BaseContext.removeCurrentId();
         // 在把当前这个对象传递给Mapper
@@ -220,11 +220,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 因为这个数据填的不完整  还需要手动的进行传入
 
         // 一个是这个时间
-        employee.setUpdateTime(LocalDateTime.now());
+        // employee.setUpdateTime(LocalDateTime.now());
         // 还有更新人
         // 因为这个更新人的id有专门的类给他解析出来  直接往里面传入就行
         // 通过这个类直接通过线程里面的一个空间去拿  ThreadLocal
-        employee.setUpdateUser(BaseContext.getCurrentId());
+        // employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.update(employee);
     }
