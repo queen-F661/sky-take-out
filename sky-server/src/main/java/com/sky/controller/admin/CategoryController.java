@@ -2,6 +2,7 @@ package com.sky.controller.admin;
 
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
+import com.sky.entity.Category;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.CategoryService;
@@ -84,5 +85,15 @@ public class CategoryController {
         categoryService.delete(id);
 
         return Result.success();
+    }
+
+    /**
+     * 菜品分类增加 下标
+     * */
+    @GetMapping("/list")
+    public Result<List<Category>> list(Integer type){
+        log.info("传递过来的type{}",type);
+        List<Category> list = categoryService.list(type);
+        return Result.success(list);
     }
 }

@@ -4,6 +4,7 @@ import com.sky.annoation.AutoFill;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
 import com.sky.enumeration.OperationType;
+import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -35,4 +36,7 @@ public interface CategoryMapper {
 
     @Delete("DELETE FROM category WHERE id = #{id}; ")
     void delete(Long id);
+
+    @Select("select * from category where type = #{type};")
+    List<Category> list(Integer type);
 }
