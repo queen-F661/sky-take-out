@@ -1,5 +1,10 @@
 package com.sky.mapper;
 
+import com.sky.annoation.AutoFill;
+import com.sky.dto.DishPageQueryDTO;
+import com.sky.entity.Dish;
+import com.sky.enumeration.OperationType;
+import com.sky.result.PageResult;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Service;
@@ -14,4 +19,12 @@ public interface DishMapper {
      * */
     @Select("SELECT count(*) FROM dish where category_id = #{id}")
     Integer countByCategoryId(Long id);
+
+    /**
+     * 新增菜品
+     * */
+    @AutoFill(OperationType.INSERT)
+    void AddDish(Dish dish);
+
+
 }

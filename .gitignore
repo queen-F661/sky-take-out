@@ -13,3 +13,5 @@
 #*.class	忽略编译产物（即使 target 漏配也能兜底）
 #*Test.java	忽略测试源码（配合 **/test/ 一起用）
 #**/test/	忽略所有 src/test 目录
+#.workbuddy/	本地工作区记忆目录，禁止提交（可能含敏感信息）
+.workbuddy/
