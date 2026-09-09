@@ -4,6 +4,7 @@
 *.class
 *Test.java
 **/test/
+**/application-dev.yml
 
 
 #**/target/	忽略所有模块的 Maven 构建产物目录（每个子模块 sky-common/sky-pojo/sky-server 下都会生成）
