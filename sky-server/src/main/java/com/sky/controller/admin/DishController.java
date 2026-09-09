@@ -40,12 +40,13 @@ public class DishController {
     /**
      * 分页查询
      * */
-//    @GetMapping
-//    public Result<PageResult> PageList(DishPageQueryDTO dishPageQueryDTO){
-//        log.info("分页查询所查询的数据{}",dishPageQueryDTO);
-//
-//        PageResult pageResult = dishService.PageList(dishPageQueryDTO);
-//
-//        return Result.success(pageResult);
-//    }
+    @GetMapping("/page")
+    public Result<PageResult> PageList(DishPageQueryDTO dishPageQueryDTO){
+        log.info("分页查询所查询的数据{}",dishPageQueryDTO);
+
+        PageResult pageResult = dishService.PageList(dishPageQueryDTO);
+
+        return Result.success(pageResult);
+    }
+
 }
