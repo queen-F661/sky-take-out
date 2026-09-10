@@ -50,4 +50,16 @@ public interface DishMapper {
      * 根据ids来进行删除
      * */
     void deleteIds(List<Long> ids);
+
+    /**
+     * 根据当前的id来查询数据
+     * */
+    @Select("select * from dish where id = #{id};")
+    Dish getById(Long id);
+
+    /**
+     * 更新相关的数据
+     * */
+    @AutoFill(value = OperationType.UPDATE)
+    void updateId(Dish dish);
 }
