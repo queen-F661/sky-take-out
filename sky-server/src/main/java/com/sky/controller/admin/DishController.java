@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/admin/dish")
@@ -49,4 +51,15 @@ public class DishController {
         return Result.success(pageResult);
     }
 
+    /**
+     * 菜品删除接口
+     * @RequestParam 这个注解可以自动的帮助当前的ids来进行逗号隔离
+     * */
+    @DeleteMapping
+    public Result<Object> deleteId(@RequestParam List<Long> ids){
+        log.info("菜品删除接口{}",ids);
+
+        dishService.deleteById(ids);
+        return Result.success();
+    }
 }

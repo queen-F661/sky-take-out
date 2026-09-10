@@ -4,11 +4,10 @@ import com.sky.annoation.AutoFill;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.enumeration.OperationType;
-import com.sky.result.PageResult;
 import com.sky.vo.DishVO;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -33,4 +32,19 @@ public interface DishMapper {
      * 分页查询（SQL 在 DishMapper.xml 的 PageList，连表 category 查出 categoryName）
      * */
     List<DishVO> PageList(DishPageQueryDTO dishPageQueryDTO);
+
+    /**
+     * 根据id来查询status
+     * @return
+     */
+    @Select("select status from dish where id = #{id}")
+    Integer getByIdStatus(Long id);
+
+    /**
+     * 删除当前的菜品表
+     * */
+    @Delete("delete from dish where id = #{id}")
+    void deleteId(Long id);
+
+
 }

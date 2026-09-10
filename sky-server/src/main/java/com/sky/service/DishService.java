@@ -4,6 +4,8 @@ import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.result.PageResult;
 
+import java.util.List;
+
 public interface DishService {
 
     /**
@@ -15,4 +17,9 @@ public interface DishService {
      * 分页查询
      * */
     PageResult PageList(DishPageQueryDTO dishPageQueryDTO);
+
+    /**
+     * 删除
+     * */
+    void deleteById(List<Long> ids);
 }
