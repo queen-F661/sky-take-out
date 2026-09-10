@@ -16,6 +16,7 @@ import com.sky.vo.DishVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -75,13 +76,14 @@ public class DishServiceImpl implements DishService {
      * 菜单删除
      * */
     @Override
+    @Transactional
     public void deleteById(List<Long> ids) {
         // 国五关 斩六将
 
         // 判断当前什么情况不能删除
         // 第一种 - 起售品不能删除  使用查询的手段判断当前为不为起售品
         for (Long id : ids) {
-            Integer Status = dishMapper.getByIdStatus(id);
+            Integer Status = dishMapper.getByIdstatus(id);
             if (Status == 1){
                 // new throws
                 throw new DeletionNotAllowedException("起售中的菜品不能删除");
@@ -97,11 +99,18 @@ public class DishServiceImpl implements DishService {
         }
 
         // 删除当前的菜品表数据
-        for (Long id : ids) {
-            dishMapper.deleteId(id);
-            // 删除口味表数据 根据当前菜品表的id来删除口味表
-            dishFlavorMapper.deleteDish_id(id);
-        }
+//        for (Long id : ids) {
+//            dishMapper.deleteId(id);
+//            // 删除口味表数据 根据当前菜品表的id来删除口味表
+//            dishFlavorMapper.deleteDish_id(id);
+//        }
+
+        // 优化这二个方法
+        // 根据ids来进行批量删除
+        dishMapper.deleteIds(ids);
+
+        // 根据当前菜品表的id来删除口味表中的数据
+        dishFlavorMapper.deleteDish_ids(ids);
 
     }
 }

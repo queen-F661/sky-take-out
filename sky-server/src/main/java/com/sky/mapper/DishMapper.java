@@ -38,7 +38,7 @@ public interface DishMapper {
      * @return
      */
     @Select("select status from dish where id = #{id}")
-    Integer getByIdStatus(Long id);
+    Integer getByIdstatus(Long id);
 
     /**
      * 删除当前的菜品表
@@ -46,5 +46,8 @@ public interface DishMapper {
     @Delete("delete from dish where id = #{id}")
     void deleteId(Long id);
 
-
+    /**
+     * 根据ids来进行删除
+     * */
+    void deleteIds(List<Long> ids);
 }
