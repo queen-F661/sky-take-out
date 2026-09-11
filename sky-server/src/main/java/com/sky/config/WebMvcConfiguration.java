@@ -47,7 +47,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
      * @return
      */
     @Bean
-    public Docket docket() {
+    public Docket docket01() {
         log.info("准备开始生成文档");
 
         ApiInfo apiInfo = new ApiInfoBuilder()
@@ -57,6 +57,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
                 .build();
 
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
+                .groupName("管理端")
                 .apiInfo(apiInfo)
                 .select()
                 // 指定扫描到sky-server的controller里面
