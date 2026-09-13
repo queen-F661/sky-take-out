@@ -5,6 +5,7 @@ import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.SetMealService;
+import com.sky.vo.SetmealVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -57,5 +58,18 @@ public class SetMealController {
         setMealService.delete(ids);
 
         return Result.success();
+    }
+
+    /**
+     * 数据回显
+     * */
+    @GetMapping("/{id}")
+    public Result<SetmealVO> getId(@PathVariable String id){
+
+        log.info("数据回显{}",id);
+
+        SetmealVO setmealVO = setMealService.getById(id);
+
+        return Result.success(setmealVO);
     }
 }

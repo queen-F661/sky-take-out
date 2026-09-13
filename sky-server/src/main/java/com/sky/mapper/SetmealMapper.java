@@ -46,4 +46,8 @@ public interface SetmealMapper {
      * */
     @Select("select status from setmeal where id = #{id}")
     Integer getStatus(Long id);
+
+
+    @Select("select * from setmeal where id = #{id}")
+    SetmealVO getById(String id);
 }

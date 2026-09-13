@@ -12,6 +12,7 @@ import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.SetMealService;
 import com.sky.vo.SetmealVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class SetMealServiceImpl implements SetMealService {
 
@@ -95,5 +97,22 @@ public class SetMealServiceImpl implements SetMealService {
 
         // 在根据传递过来的ids来进行删除对应的数据
         setmealDishMapper.delete(ids);
+    }
+
+    /**
+     * 根据id来查询相关的数据
+     * 数据的回显
+     * */
+    @Override
+    public SetmealVO getById(String id) {
+
+        SetmealVO setmealVO =  setmealMapper.getById(id);
+
+        // 因为这个数据菜品也有数据  所以当前还需要查看这个数据还有没有
+        // 查看当前的mapper
+        List<SetmealDish> setmealDishes = setmealDishMapper.getById(id);
+        setmealVO.setSetmealDishes(setmealDishes);
+        log.info("数据回显后的传递给前端的数字{}",setmealVO);
+        return setmealVO;
     }
 }

@@ -3,7 +3,7 @@ package com.sky.service;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.result.PageResult;
-import org.apache.ibatis.annotations.Mapper;
+import com.sky.vo.SetmealVO;
 
 import java.util.List;
 
@@ -24,4 +24,9 @@ public interface SetMealService {
      * 删除
      * */
     void delete(List<Long> ids);
+
+    /**
+     * 根据id来查询
+     * */
+    SetmealVO getById(String id);
 }
