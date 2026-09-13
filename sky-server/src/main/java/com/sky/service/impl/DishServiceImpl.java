@@ -13,11 +13,13 @@ import com.sky.mapper.SetmealDishMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
+import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -155,5 +157,13 @@ public class DishServiceImpl implements DishService {
             }
             dishFlavorMapper.AddDish(flavors);
         }
+    }
+
+    @Override
+    public List<Dish> list(Long categoryId) {
+
+        // 根据这个categoryId来返回数据
+        List<Dish> list = dishMapper.list(categoryId);
+        return list;
     }
 }

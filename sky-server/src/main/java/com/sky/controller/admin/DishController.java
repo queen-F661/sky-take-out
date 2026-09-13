@@ -2,6 +2,7 @@ package com.sky.controller.admin;
 
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
+import com.sky.entity.Dish;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.result.PageResult;
@@ -88,5 +89,20 @@ public class DishController {
 
         dishService.updateId(dishDTO);
         return Result.success();
+    }
+
+    /**
+     * 套餐新增页面的
+     * 添加菜品
+     * */
+    @GetMapping("/list")
+    public Result<List<Dish>> list(Long categoryId){
+        log.info("菜品查询:{}",categoryId);
+
+        // 因为前端要获取多条数据  所以要封装当前的数据
+        List<Dish> list = dishService.list(categoryId);
+
+        return Result.success(list);
+
     }
 }
