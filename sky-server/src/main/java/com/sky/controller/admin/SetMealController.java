@@ -72,4 +72,15 @@ public class SetMealController {
 
         return Result.success(setmealVO);
     }
+
+    /**
+     * 套餐修改接口
+     * */
+    @PutMapping
+    public Result update(@RequestBody SetmealDTO setmealDTO){
+
+        log.info("套餐修改接口{}",setmealDTO);
+        setMealService.update(setmealDTO);
+        return Result.success();
+    }
 }

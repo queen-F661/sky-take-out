@@ -50,4 +50,9 @@ public interface SetmealMapper {
 
     @Select("select * from setmeal where id = #{id}")
     SetmealVO getById(String id);
+
+    /**
+     * 修改数据
+     * */
+    void update(Setmeal setmeal);
 }

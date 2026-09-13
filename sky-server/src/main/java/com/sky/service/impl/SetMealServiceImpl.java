@@ -115,4 +115,39 @@ public class SetMealServiceImpl implements SetMealService {
         log.info("数据回显后的传递给前端的数字{}",setmealVO);
         return setmealVO;
     }
+
+    @Override
+    @Transactional
+    public void update(SetmealDTO setmealDTO) {
+
+        // 首先  看前端接口过来的数据为不为空
+        // 如果为空 那么就直接在这里报错
+        if(setmealDTO == null){
+            throw new DeletionNotAllowedException("当前数据为空");
+        }
+
+        // 首先  这个是关系二张表
+        // 第一个是套餐菜品表
+        // 要把数据取出来
+        Setmeal setmeal = new Setmeal();
+        BeanUtils.copyProperties(setmealDTO,setmeal);
+        setmealMapper.update(setmeal);
+
+        // 一个是菜品和套餐关系表
+        // 首先 是把当前的数据取出
+        // 因为这个数据是直接取出来
+
+        // 要首先 你要把表直接全部删除
+        List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
+        Long id = setmealDTO.getId();
+        setmealDishMapper.deleteId(id);
+
+        // 新增
+        for (SetmealDish setmealDish : setmealDishes) {
+            // 插入setmeal_id
+            // 因为数据回显这个是根据这个字段查询的 如果没有这个字段 那咋查
+            setmealDish.setSetmealId(setmealDTO.getId());
+            setmealDishMapper.add(setmealDish);
+        }
+    }
 }

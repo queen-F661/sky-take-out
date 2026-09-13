@@ -29,4 +29,9 @@ public interface SetMealService {
      * 根据id来查询
      * */
     SetmealVO getById(String id);
+
+    /**
+     * 套餐修改接口
+     * */
+    void update(SetmealDTO setmealDTO);
 }
