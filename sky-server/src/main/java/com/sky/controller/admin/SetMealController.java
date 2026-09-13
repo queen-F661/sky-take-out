@@ -2,6 +2,7 @@ package com.sky.controller.admin;
 
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
+import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.SetMealService;
@@ -38,6 +39,10 @@ public class SetMealController {
     @PostMapping
     public Result add(@RequestBody SetmealDTO setmealDTO){
         log.info("新增菜单");
+
+        // 把数据传递到当前的service
+        setMealService.add(setmealDTO);
+
         return Result.success();
     }
 }
