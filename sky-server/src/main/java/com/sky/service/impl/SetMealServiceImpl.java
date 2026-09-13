@@ -150,4 +150,18 @@ public class SetMealServiceImpl implements SetMealService {
             setmealDishMapper.add(setmealDish);
         }
     }
+
+    /**
+     * 套餐起售、停售
+     * */
+    @Override
+    public void status(Integer status,Long id) {
+        if(status == null){
+            throw new DeletionNotAllowedException("传递过来数据为空null");
+        }
+        Setmeal setmeal = new Setmeal();
+        setmeal.setStatus(status);
+        setmeal.setId(id);
+        setmealMapper.update(setmeal);
+    }
 }

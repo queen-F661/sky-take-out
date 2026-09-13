@@ -55,4 +55,9 @@ public interface SetmealMapper {
      * 修改数据
      * */
     void update(Setmeal setmeal);
+
+    /**
+     * 套餐起售、停售
+     * */
+    void status(Integer status);
 }

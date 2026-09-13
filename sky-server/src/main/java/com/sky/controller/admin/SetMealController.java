@@ -83,4 +83,16 @@ public class SetMealController {
         setMealService.update(setmealDTO);
         return Result.success();
     }
+
+    /**
+     * 套餐起售、停售
+     * */
+    @PostMapping("/status/{status}")
+    public Result status(@PathVariable Integer status, Long id){
+
+        log.info("套餐起售、停售传递过来的数据{}",status,id);
+        setMealService.status(status,id);
+
+        return Result.success();
+    }
 }
