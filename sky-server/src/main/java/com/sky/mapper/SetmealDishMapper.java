@@ -17,4 +17,9 @@ public interface SetmealDishMapper {
     @Insert("insert into setmeal_dish (setmeal_id, dish_id, name, price, copies)\n" +
             "values (#{setmealId},#{dishId},#{name},#{price},#{copies})")
     void add(SetmealDish setmealDish);
+
+    /**
+     * 删除套餐关系表
+     * */
+    void delete(List<Long> ids);
 }

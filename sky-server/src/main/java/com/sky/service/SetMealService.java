@@ -5,6 +5,8 @@ import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.result.PageResult;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 
 public interface SetMealService {
 
@@ -17,4 +19,9 @@ public interface SetMealService {
      * 新增查询
      * */
     void add(SetmealDTO setmealDTO);
+
+    /**
+     * 删除
+     * */
+    void delete(List<Long> ids);
 }
