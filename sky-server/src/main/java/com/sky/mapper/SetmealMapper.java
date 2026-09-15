@@ -59,5 +59,11 @@ public interface SetmealMapper {
     /**
      * 套餐起售、停售
      * */
+    @Select("select * from setmeal where status = #{status};")
     void status(Integer status);
+
+    /**
+     * 根据id来查询套餐数据
+     * */
+    List<Setmeal> list(Setmeal setmeal);
 }

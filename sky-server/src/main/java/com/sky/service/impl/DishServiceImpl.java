@@ -19,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -165,5 +167,29 @@ public class DishServiceImpl implements DishService {
         // 根据这个categoryId来返回数据
         List<Dish> list = dishMapper.list(categoryId);
         return list;
+    }
+
+    @Override
+    public List<DishVO> listWithFlavor(Dish dish) {
+        // 首先  要先把这个主表的数据取出来
+        // 那么不需要那个集合字段  我只用实体类就行  但是这个是传递很多条到前端
+        // 那么就可以用list来接收数据
+        ArrayList<Dish> dishes = dishMapper.listWithFlavor(dish);
+        // 这个是要接收的数据
+        ArrayList<DishVO> dishVOS = new ArrayList<>();
+
+        for (Dish dish1 : dishes) {
+            // 创建一个DishVo
+            DishVO dishVO = new DishVO();
+            // 要把当前的数据传递给
+            BeanUtils.copyProperties(dish1,dishVO);
+            // 在把数据传递给disVo
+            List<DishFlavor> flavors = dishFlavorMapper.getById(dish1.getId());
+            // 把数据填进去
+            dishVO.setFlavors(flavors);
+            // 在把当前的数据传递给dishVOS
+            dishVOS.add(dishVO);
+        }
+        return dishVOS;
     }
 }

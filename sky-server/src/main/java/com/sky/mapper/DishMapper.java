@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Mapper
@@ -67,4 +68,12 @@ public interface DishMapper {
 
     @Select("select * FROM dish where category_id = #{categoryId}")
     List<Dish> list(Long categoryId);
+
+
+
+    /**
+     * 根据id来查询相应的数据
+     * */
+      @Select("select * from dish where category_id = #{categoryId} and status = #{status}")
+      ArrayList<Dish> listWithFlavor(Dish dish);
 }
