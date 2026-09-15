@@ -14,9 +14,11 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.message.ReusableMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 
 @RestController
@@ -28,6 +30,8 @@ public class DishController {
     @Autowired
     private DishService dishService;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 增加菜品接口
@@ -39,6 +43,14 @@ public class DishController {
 
         // 通过这个数据传递
         dishService.AddDish(dishDTO);
+
+
+//        // 清理我们的缓存数据
+        String key = "dish_" + dishDTO.getCategoryId();
+//        // 删除当前的redis相应的数据
+//        redisTemplate.delete(key);
+        cleanCache(key);
+
         return Result.success();
     }
 
@@ -63,6 +75,12 @@ public class DishController {
         log.info("菜品删除接口{}",ids);
 
         dishService.deleteById(ids);
+
+//        // 这个是查询当前的key为dish_开头的
+//        Set keys = redisTemplate.keys("dish_*");
+//        // 这个是删除当前redis下面的dish开头的数据
+//        redisTemplate.delete(keys);
+        cleanCache("dish_*");
         return Result.success();
     }
 
@@ -88,6 +106,13 @@ public class DishController {
         log.info("修改菜品{}",dishDTO);
 
         dishService.updateId(dishDTO);
+
+//        // 这个是查询当前的key为dish_开头的
+//        Set keys = redisTemplate.keys("dish_*");
+//        // 这个是删除当前redis下面的dish开头的数据
+//        redisTemplate.delete(keys);
+
+        cleanCache("dish_*");
         return Result.success();
     }
 
@@ -101,8 +126,17 @@ public class DishController {
 
         // 因为前端要获取多条数据  所以要封装当前的数据
         List<Dish> list = dishService.list(categoryId);
+        cleanCache("dish_*");
 
         return Result.success(list);
 
+    }
+
+    /**
+     * 清理缓存数据
+     * */
+    private void cleanCache(String pattern){
+        Set keys = redisTemplate.keys(pattern);
+        redisTemplate.delete(keys);
     }
 }
