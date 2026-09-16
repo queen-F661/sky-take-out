@@ -8,6 +8,7 @@ import com.sky.service.SetMealService;
 import com.sky.vo.SetmealVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,6 +40,8 @@ public class SetMealController {
      * 新增套餐
      * */
     @PostMapping
+    // 当在当前分类下面添加一个套餐  根据这个分类id来删除相应相应套餐数据
+    @CacheEvict(cacheNames = "setmealCache",key = "#setmealDTO.categoryId")
     public Result add(@RequestBody SetmealDTO setmealDTO){
         log.info("新增套餐");
 
@@ -52,6 +55,7 @@ public class SetMealController {
      * 批量删除套餐
      * @RequestParam 这个注解可以自动的帮助当前的ids来进行逗号隔离
      * */
+    @CacheEvict(cacheNames = "setmealCache",allEntries = true)
     @DeleteMapping
     public Result delete(@RequestParam List<Long> ids){
 
@@ -76,6 +80,7 @@ public class SetMealController {
     /**
      * 套餐修改接口
      * */
+    @CacheEvict(cacheNames = "setmealCache",allEntries = true)
     @PutMapping
     public Result update(@RequestBody SetmealDTO setmealDTO){
 
@@ -87,6 +92,7 @@ public class SetMealController {
     /**
      * 套餐起售、停售
      * */
+    @CacheEvict(cacheNames = "setmealCache",allEntries = true)
     @PostMapping("/status/{status}")
     public Result status(@PathVariable Integer status, Long id){
 

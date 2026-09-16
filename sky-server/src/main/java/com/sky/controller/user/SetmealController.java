@@ -7,6 +7,8 @@ import com.sky.service.SetMealService;
 import com.sky.vo.DishItemVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,9 +28,12 @@ public class SetmealController {
     /**
      * 根据当前的根据套餐id来查询相关的信息
      * */
-    @GetMapping("/list")
-    public Result<List<Setmeal>> list(Long categoryId){
+    // 因为这个是查询 可以将数据存储到redis里面
+    // 这样你下次查询的时候 就可以直接调用redis
 
+    @GetMapping("/list")
+    @Cacheable(cacheNames = "setmealCache",key = "#categoryId")
+    public Result<List<Setmeal>> list(Long categoryId){
         log.info("当前展示数据{}",categoryId);
 
         Setmeal setmeal = new Setmeal();
