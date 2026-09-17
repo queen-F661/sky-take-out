@@ -49,4 +49,15 @@ public class ShoppingCartController {
 
         return Result.success();
     }
+
+    /**
+     * 删除购物车的一个商品
+     * */
+    @PostMapping("/sub")
+    public Result<Object> deleteId(@RequestBody ShoppingCartDTO shoppingCartDTO){
+
+        shoppingCartService.deleteId(shoppingCartDTO);
+
+        return Result.success();
+    }
 }

@@ -1,6 +1,7 @@
 package com.sky.mapper;
 
 import com.sky.entity.ShoppingCart;
+import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -32,4 +33,19 @@ public interface ShoppingCartMapper {
      * */
     @Delete("delete from shopping_cart where  user_id = #{userId};")
     void deleteId(Long userId);
+
+    /**
+     * 查询number
+     * */
+    Integer dishCount(ShoppingCart shoppingCart);
+
+    /**
+     * 根据当前的id来进行删除
+     * */
+    void delete(ShoppingCart shoppingCart);
+
+    /**
+     * 删除number数量
+     * */
+    void deleteNumber(ShoppingCart shoppingCart);
 }

@@ -120,4 +120,32 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     }
 
+    /**
+     * 删除购物车的一个商品
+     * */
+    @Override
+    public void deleteId(ShoppingCartDTO shoppingCartDTO) {
+        // 判断当前是菜单还是套餐
+        ShoppingCart shoppingCart = new ShoppingCart();
+        BeanUtils.copyProperties(shoppingCartDTO,shoppingCart);
+        Long userId = BaseContext.getCurrentId();
+        shoppingCart.setUserId(userId);
+
+        if(shoppingCart.getDishId() != null || shoppingCart.getSetmealId() != null){
+            // 这个是当前菜品id或者是套餐id
+            // 在查询数量唯不唯一
+            Integer dishCount =  shoppingCartMapper.dishCount(shoppingCart);
+
+            if(dishCount == 1){
+                // 如果只有1个的话,就删除
+                shoppingCartMapper.delete(shoppingCart);
+            }else {
+                dishCount -= 1;
+                shoppingCart.setNumber(dishCount);
+                // 如果说是1个以上 那么就number--
+                shoppingCartMapper.deleteNumber(shoppingCart);
+            }
+        }
+    }
+
 }
