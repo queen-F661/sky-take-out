@@ -106,7 +106,7 @@ public class SetMealServiceImpl implements SetMealService {
      * 数据的回显
      * */
     @Override
-    public SetmealVO getById(String id) {
+    public SetmealVO getById(Long id) {
 
         SetmealVO setmealVO =  setmealMapper.getById(id);
 

@@ -9,6 +9,7 @@ import com.sky.vo.SetmealVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class SetMealController {
     /**
      * 分页查询
      * */
+    @Transactional
     @GetMapping("/page")
     public Result<PageResult> pageList(SetmealPageQueryDTO setmealPageQueryDTO){
 
@@ -68,7 +70,7 @@ public class SetMealController {
      * 数据回显
      * */
     @GetMapping("/{id}")
-    public Result<SetmealVO> getId(@PathVariable String id){
+    public Result<SetmealVO> getId(@PathVariable Long id){
 
         log.info("数据回显{}",id);
 

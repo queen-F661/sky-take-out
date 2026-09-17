@@ -49,7 +49,7 @@ public interface SetmealMapper {
 
 
     @Select("select * from setmeal where id = #{id}")
-    SetmealVO getById(String id);
+    SetmealVO getById(Long id);
 
     /**
      * 修改数据

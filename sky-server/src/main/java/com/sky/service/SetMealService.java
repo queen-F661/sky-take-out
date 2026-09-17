@@ -30,7 +30,7 @@ public interface SetMealService {
     /**
      * 根据id来查询
      * */
-    SetmealVO getById(String id);
+    SetmealVO getById(Long id);
 
     /**
      * 套餐修改接口

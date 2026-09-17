@@ -32,7 +32,7 @@ public interface SetmealDishMapper {
      * 数据回显
      * */
     @Select("select * from setmeal_dish where setmeal_id = #{setmealId};")
-    List<SetmealDish> getById(String setmealId);
+    List<SetmealDish> getById(Long setmealId);
 
     @Delete("delete from setmeal_dish where setmeal_id = #{id}")
     void deleteId(Long id);
