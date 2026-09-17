@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -93,6 +94,19 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             // 在把当前的数据传入到sql
             shoppingCartMapper.insert(shoppingCart);
         }
+    }
+
+    /**
+     * 页面展示
+     * */
+    @Override
+    public List<ShoppingCart> list() {
+        Long currentId = BaseContext.getCurrentId();
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setUserId(currentId);
+        // 把当前需要的数据取出来
+        List<ShoppingCart> list = shoppingCartMapper.list(shoppingCart);
+        return list;
     }
 
 }

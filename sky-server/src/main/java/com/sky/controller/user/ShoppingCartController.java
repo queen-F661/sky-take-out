@@ -1,13 +1,14 @@
 package com.sky.controller.user;
 
+import com.sky.context.BaseContext;
 import com.sky.dto.ShoppingCartDTO;
+import com.sky.entity.ShoppingCart;
 import com.sky.result.Result;
 import com.sky.service.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user/shoppingCart")
@@ -25,5 +26,16 @@ public class ShoppingCartController {
         shoppingCartService.add(shoppingCartDTO);
         // 因为这个是新增 不需要传递数据
         return Result.success();
+    }
+
+    /**
+     * 展示当前的数据
+     * */
+    @GetMapping("/list")
+    public Result<List<ShoppingCart>> list(){
+        // 根据当前的baseContext查询相关的信息
+        List<ShoppingCart> shoppingCarts = shoppingCartService.list();
+
+        return Result.success(shoppingCarts);
     }
 }

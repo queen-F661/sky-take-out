@@ -29,4 +29,5 @@ public interface ShoppingCartMapper {
     @Insert("insert into shopping_cart (name, image, user_id, dish_id, setmeal_id, dish_flavor, amount, number, create_time) " +
             "values (#{name},#{image},#{userId},#{dishId},#{setmealId},#{dishFlavor},#{amount},#{number},#{createTime})")
     void insert(ShoppingCart shoppingCart);
+
 }
