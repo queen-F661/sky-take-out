@@ -9,7 +9,6 @@ import java.util.List;
 @Mapper
 public interface ShoppingCartMapper {
 
-
     /**
      * 动态条件查询
      * */
