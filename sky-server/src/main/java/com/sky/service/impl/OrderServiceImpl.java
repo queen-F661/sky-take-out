@@ -150,6 +150,22 @@ public class OrderServiceImpl implements OrderService {
 
         String json = JSON.toJSONString(map);
         webSocketServer.sendToAllClient(json);
-
     }
+
+    @Override
+    public void reminder(Long id) {
+        Orders byId = orderMapper.getById(id);
+        if(byId == null){
+            throw new AddressBookBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+
+        HashMap hashMap = new HashMap();
+        hashMap.put("type",2);
+        hashMap.put("orderId",id);
+        hashMap.put("content","订单号" + byId.getAddress());
+
+        webSocketServer.sendToAllClient(JSON.toJSONString(hashMap));
+    }
+
+
 }

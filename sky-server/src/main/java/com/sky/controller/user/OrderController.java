@@ -7,6 +7,7 @@ import com.sky.service.OrderService;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * 用户订单接口
  */
+@Slf4j
 @RestController
 @RequestMapping("/user/order")
 public class OrderController {
@@ -50,4 +52,21 @@ public class OrderController {
         // 返回空对象只是为了不破坏前端的返回格式(res.code === 1 && res.data)
         return Result.success(new OrderPaymentVO());
     }
+
+    /**
+     * 用户催单
+     * */
+    @GetMapping("/reminder/{id}")
+    public Result<Object> reminder(@PathVariable Long id){
+
+        log.info("客户催单");
+
+        orderService.reminder(id);
+
+        return Result.success();
+    }
+
+    /**
+     * 历史订单查询
+     * */
 }
