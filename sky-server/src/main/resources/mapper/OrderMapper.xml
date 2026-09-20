@@ -12,4 +12,25 @@
         #{payStatus},#{amount}, #{remark}, #{phone}, #{address}, #{consignee}, #{estimatedDeliveryTime},
         #{deliveryStatus},#{packAmount}, #{tablewareNumber}, #{tablewareStatus})
     </insert>
+
+    <!--
+        动态更新订单：模拟支付(paySuccess)时只用到了 3 个字段
+        <set> 标签会自动拼出 "set xxx = ?" 并去掉末尾多余的逗号
+        <if> 标签：传了哪个字段才拼哪一段 SQL，没传的字段保持原值
+    -->
+    <update id="update" parameterType="com.sky.entity.Orders">
+        update orders
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="payStatus != null">
+                pay_status = #{payStatus},
+            </if>
+            <if test="checkoutTime != null">
+                checkout_time = #{checkoutTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

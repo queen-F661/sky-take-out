@@ -8,6 +8,7 @@ import com.sky.entity.OrderDetail;
 import com.sky.entity.Orders;
 import com.sky.entity.ShoppingCart;
 import com.sky.exception.AddressBookBusinessException;
+import com.sky.exception.OrderBusinessException;
 import com.sky.mapper.AddressBookMapper;
 import com.sky.mapper.OrderDetailMapper;
 import com.sky.mapper.OrderMapper;
@@ -107,5 +108,30 @@ public class OrderServiceImpl implements OrderService {
                 .orderTime(orders.getOrderTime())
                 .build();
         return orderSubmitVO;
+    }
+
+    /**
+     * 模拟支付成功
+     * 原课程流程：前端点支付 -> 后端 WeChatPayUtil 调微信统一下单 -> 前端拉起微信收银台
+     *            -> 用户付款 -> 微信服务器回调后端 -> 后端修改订单状态
+     * 模拟流程：因为没有商户号/商户证书/认证小程序，微信那一整段直接跳过，
+     *          用户点支付时，后端"替微信"把订单标记为已支付，效果和真支付成功一样
+     * */
+    @Override
+    public void paySuccess(String orderNumber) {
+        // 第一步：根据订单号把订单查出来，查不到说明订单有问题，直接抛业务异常
+        Orders ordersDB = orderMapper.getByNumber(orderNumber);
+        if (ordersDB == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+
+        // 第二步：模拟"微信支付成功回调"要做的事 —— 只改 3 个字段
+        // 这里只 new 一个新对象来装要改的字段，千万不要直接用 ordersDB 整个更新
+        Orders orders = new Orders();
+        orders.setId(ordersDB.getId());                  // 按主键定位这一行
+        orders.setPayStatus(Orders.PAID);                // 支付状态：0未支付 -> 1已支付
+        orders.setStatus(Orders.TO_BE_CONFIRMED);        // 订单状态：1待付款 -> 2待接单（商家端才能看到这单）
+        orders.setCheckoutTime(LocalDateTime.now());     // 付款时间：记录当前时间
+        orderMapper.update(orders);
     }
 }
