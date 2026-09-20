@@ -1,9 +1,11 @@
 package com.sky.mapper;
 
 import com.sky.entity.Orders;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Mapper
 public interface OrderMapper {
@@ -25,4 +27,10 @@ public interface OrderMapper {
      * 所以这里用 <if> 动态 SQL：传了哪个字段就更新哪个字段，没传的不动
      * */
     void update(Orders orders);
+
+    /**
+     * 要查询当前有没有订单超时为15分钟且订单处于是在待付款方式
+     * */
+    @Select("select * from orders where status = #{status} and order_time < #{orderTime};")
+    List<Orders> getByStatusAndOrderTime(Integer status, LocalDateTime orderTime);
 }
