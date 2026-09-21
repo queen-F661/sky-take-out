@@ -7,6 +7,7 @@ import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.AddressBookDTO;
 import com.sky.dto.OrdersPageQueryDTO;
+import com.sky.dto.OrdersRejectionDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.AddressBook;
 import com.sky.entity.OrderDetail;
@@ -368,38 +369,40 @@ public class OrderServiceImpl implements OrderService {
     }
     /**
      * 拒单 rejection
+     * 业务规则：只有"待接单(2)"的订单可以拒单；已支付的订单要标记退款
      * */
     @Override
-    public void rejection(AddressBookDTO addressBookDTO) {
+    public void rejection(OrdersRejectionDTO ordersRejectionDTO) {
 
-        // 因为这个里面需要判断当前的程序当中要不要进行数据
-        // 的判断
-        // 只要当前待接单的时候才能拒单
-        // 所以我们要在这里进行判断
+        // ① 查：根据id把订单从数据库捞出来
+        Orders orders = orderMapper.getById(ordersRejectionDTO.getId());
 
-        // 查询数据
-        Orders orders = orderMapper.getById(addressBookDTO.getId());
-        // 1.进行判断
-        // 判断当前为不为空 如果为空就直接报错
+        // ② 判空：订单不存在，拦下来，不然下面 orders.getStatus() 会空指针
         if(orders == null){
             throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
         }
 
-        //   如果不是2 直接new throws
-        if(!orders.getStatus().equals(Orders.REFUND)){
-            throw new AddressBookBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        // ③ 校验：只有待接单(TO_BE_CONFIRMED=2，这是"订单状态")才能拒单
+        //    注意别用 REFUND！那是"支付状态"里的退款(值也是2，纯巧合)
+        if(!orders.getStatus().equals(Orders.TO_BE_CONFIRMED)){
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
         }
-        // 2.如果是二就继续下去
-        // 3.在进行数据的封装 把值写到当前的类当中
-        // 在把数据的封装
-        Orders orders1 = new Orders();
-        orders1.setStatus(Orders.CANCELLED);
-        orders1.setRejectionReason(addressBookDTO.getRejectionReason());
-        orders1.setId(addressBookDTO.getId());
-        orders1.setCancelTime(LocalDateTime.now());
 
-        // 4.根据当前的id来进行数据的修改操作
-        orderMapper.update(orders1);
+        // ④ 组装：new 一个新对象，只装要改的字段（不要拿 orders 整个实体去 update）
+        Orders ordersToUpdate = new Orders();
+        ordersToUpdate.setId(ordersRejectionDTO.getId());
+        ordersToUpdate.setStatus(Orders.CANCELLED);
+        ordersToUpdate.setRejectionReason(ordersRejectionDTO.getRejectionReason());
+        ordersToUpdate.setCancelTime(LocalDateTime.now());
+
+        // ⑤ 退款标记：用户已支付的话，把支付状态改成"退款"
+        //    （模拟支付：不调微信退款接口，只改账面状态）
+        if(orders.getPayStatus().equals(Orders.PAID)){
+            ordersToUpdate.setPayStatus(Orders.REFUND);
+        }
+
+        // ⑥ 走动态 update 落库
+        orderMapper.update(ordersToUpdate);
     }
 
     /**
@@ -416,16 +419,47 @@ public class OrderServiceImpl implements OrderService {
             throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
         }
         // 早判断当前的这个status为不为3  只有当前带派送里面有这个数据
-        if(!byId.getStatus().equals(Orders.CONFIRMED)){
-            throw new AddressBookBusinessException(MessageConstant.ORDER_STATUS_ERROR);
-        }
+//        if(!byId.getStatus().equals(Orders.CONFIRMED) || !byId.getStatus().equals(Orders.COMPLETED)){
+//            throw new AddressBookBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+//        }
         // 在进行数据的拼接数据
         // 因为你要传递相应的值
         byId.setRejectionReason(addressBookDTO.getCancelReason());
         byId.setStatus(Orders.CANCELLED);
         byId.setCancelTime(LocalDateTime.now());
+        // 判断当前有没有付款
+        // 如果付款的话就执行 如果说是没有付款就直接把值跳过 不需要改
+        // 如果修改的话就会出问题
+
+        // 这个是支付状态为1
+        if(byId.getPayStatus().equals(Orders.PAID)){
+            // 这样就可以把值进行修改成2 退款状态
+            byId.setPayStatus(Orders.REFUND);
+        }
 
         // 拼接完成之后在把这个类传递给当前的mapper
+        orderMapper.update(byId);
+    }
+
+    /**
+     * 派送
+     * */
+    @Override
+    public void delivery(Long id) {
+
+        Orders byId = orderMapper.getById(id);
+        // 判断当前为不为空
+        if(byId == null){
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+
+        // 在肯定是在待派送状态 已接单的状态
+        if(!byId.getStatus().equals(Orders.CONFIRMED)){
+            throw new AddressBookBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        byId.setStatus(Orders.DELIVERY_IN_PROGRESS);
+        // 在把状态的数据修改一下
         orderMapper.update(byId);
     }
 

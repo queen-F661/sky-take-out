@@ -3,6 +3,7 @@ package com.sky.controller.admin;
 import com.sky.dto.AddressBookDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
+import com.sky.dto.OrdersRejectionDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.Orders;
 import com.sky.result.PageResult;
@@ -16,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 
 /**
@@ -81,9 +84,9 @@ public class OrderController {
      * 拒单 rejection
      * */
     @PutMapping("/rejection")
-    public Result<Object> rejection(@RequestBody AddressBookDTO addressBookDTO){
+    public Result<Object> rejection(@RequestBody OrdersRejectionDTO ordersRejectionDTO){
 
-        orderService.rejection(addressBookDTO);
+        orderService.rejection(ordersRejectionDTO);
 
         return Result.success();
     }
@@ -95,6 +98,17 @@ public class OrderController {
     public Result<Object> cancel(@RequestBody AddressBookDTO addressBookDTO){
 
         orderService.admincancel(addressBookDTO);
+
+        return Result.success();
+    }
+
+    /**
+     * 派送
+     * */
+    @PutMapping("/delivery/{id}")
+    public Result<Object> delivery(@PathVariable Long id){
+
+        orderService.delivery(id);
 
         return Result.success();
     }

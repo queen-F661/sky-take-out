@@ -2,6 +2,7 @@ package com.sky.service;
 
 import com.sky.dto.AddressBookDTO;
 import com.sky.dto.OrdersPageQueryDTO;
+import com.sky.dto.OrdersRejectionDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.result.PageResult;
 import com.sky.vo.OrderStatisticsVO;
@@ -69,10 +70,15 @@ public interface OrderService {
     /**
      * 拒单 rejection
      * */
-    void rejection(AddressBookDTO addressBookDTO);
+    void rejection(OrdersRejectionDTO ordersRejectionDTO);
 
     /**
      * 商家取消订单 cancel
      * */
     void admincancel(AddressBookDTO addressBookDTO);
+
+    /**
+     * 派送
+     * */
+    void delivery(Long id);
 }
