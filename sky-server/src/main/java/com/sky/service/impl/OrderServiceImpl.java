@@ -240,5 +240,33 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+    /**
+     * 再来一单
+     * */
+    @Transactional
+    @Override
+    public void repetition(Long id) {
+        // 因为这个数据是在订单明细表中
+        // 所以先把当前的明细表的数据取出
+        List<OrderDetail> orderDetails = orderDetailMapper.pageQuery(id);
+        // 在根据这个明细表 把明细表的数据拷贝到当前的购物车表类
+        ArrayList<ShoppingCart> shoppingCarts = new ArrayList<>();
+        for (OrderDetail orderDetail : orderDetails) {
+            ShoppingCart shoppingCart = new ShoppingCart();
+            // 但是有一点注意 就是这个数据取出的时候id不能给他赋值
+            // 因为购物车表会给他新的id
+            orderDetail.setId(null);
+            BeanUtils.copyProperties(orderDetail,shoppingCart);
+            Long currentId = BaseContext.getCurrentId();
+            shoppingCart.setUserId(currentId);
+            shoppingCart.setCreateTime(LocalDateTime.now());
+
+            shoppingCarts.add(shoppingCart);
+        }
+
+        // 在在insert把数据放到购物车里面去
+        shoppingCartMapper.insertBatch(shoppingCarts);
+    }
+
 
 }

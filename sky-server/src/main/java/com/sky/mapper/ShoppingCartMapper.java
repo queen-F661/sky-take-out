@@ -4,6 +4,7 @@ import com.sky.entity.ShoppingCart;
 import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Mapper
@@ -47,4 +48,7 @@ public interface ShoppingCartMapper {
      * 删除number数量
      * */
     void deleteNumber(ShoppingCart shoppingCart);
+
+
+    void insertBatch(ArrayList<ShoppingCart> shoppingCarts);
 }
