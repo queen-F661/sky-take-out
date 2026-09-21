@@ -1,7 +1,11 @@
 package com.sky.service;
 
+import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersSubmitDTO;
+import com.sky.result.PageResult;
 import com.sky.vo.OrderSubmitVO;
+
+import java.util.List;
 
 public interface OrderService {
 
@@ -22,4 +26,9 @@ public interface OrderService {
      * 用户催单
      * */
     void reminder(Long id);
+
+    /**
+     * 历史订单查询
+     * */
+    PageResult history(OrdersPageQueryDTO ordersPageQueryDTO);
 }

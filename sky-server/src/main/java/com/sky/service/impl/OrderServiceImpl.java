@@ -1,8 +1,11 @@
 package com.sky.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
+import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.AddressBook;
 import com.sky.entity.OrderDetail;
@@ -14,8 +17,10 @@ import com.sky.mapper.AddressBookMapper;
 import com.sky.mapper.OrderDetailMapper;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.ShoppingCartMapper;
+import com.sky.result.PageResult;
 import com.sky.service.OrderService;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrderVO;
 import com.sky.webSocket.WebSocketServer;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -162,9 +164,48 @@ public class OrderServiceImpl implements OrderService {
         HashMap hashMap = new HashMap();
         hashMap.put("type",2);
         hashMap.put("orderId",id);
-        hashMap.put("content","订单号" + byId.getAddress());
+        hashMap.put("content","订单号" + byId.getNumber());
 
         webSocketServer.sendToAllClient(JSON.toJSONString(hashMap));
+    }
+
+    @Override
+    public PageResult history(OrdersPageQueryDTO ordersPageQueryDTO) {
+        // 先进行分页查询
+        PageHelper.startPage(ordersPageQueryDTO.getPage(),ordersPageQueryDTO.getPageSize());
+        // 因为你查询历史记录肯定要根据当前用户来查询
+        // 如果不怎么查的话数据会在一起
+        ordersPageQueryDTO.setUserId(BaseContext.getCurrentId());
+        Page<Orders> page = orderMapper.pageQuery(ordersPageQueryDTO);
+
+        ArrayList<OrderVO> orderVOS = new ArrayList<>();
+        // 在根据当前循环来进行数据的便利和获取
+        for (Orders orders : page) {
+            // 首先 你肯定是要当前这个主表的数据id取出来
+            Long orderId = orders.getId();
+            // 在执行sql 来进行数据的查询 看每一条地址数据有几条明细数据
+            // 因为有时候明细表会查询几条数据 所以要使用当前的list集合进行存储
+            List<OrderDetail> OrderDetail = orderDetailMapper.pageQuery(orderId);
+
+            // 创建一个对象 用来存储数据在给循环外面的数据存储数据
+            OrderVO orderVO = new OrderVO();
+            // 把当亲的对象存储到orders里面
+            BeanUtils.copyProperties(orders,orderVO);
+            // 把这个明细表存储到这个orderVo的一个字段上面
+            orderVO.setOrderDetailList(OrderDetail);
+            // 给外面的集合添加值
+            orderVOS.add(orderVO);
+        }
+
+        // 在进行最后的拼接
+        // 获取当前的总数
+        long total = page.getTotal();
+
+        PageResult pageResult = new PageResult();
+        pageResult.setTotal(total);
+        pageResult.setRecords(orderVOS);
+
+        return pageResult;
     }
 
 
