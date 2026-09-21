@@ -324,7 +324,6 @@ public class OrderServiceImpl implements OrderService {
     /**
      * 各个状态的订单数量统计
      * */
-    @Transactional
     @Override
     public OrderStatisticsVO statistics() {
 
@@ -352,8 +351,16 @@ public class OrderServiceImpl implements OrderService {
      * */
     @Override
     public void confirm(Long id) {
+        Orders byId = orderMapper.getById(id);
+        // 如果传递一个不存在的id 会挂掉的
+        if(byId == null){
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
 
-
+        // 只有2才能接单  其他的接住之后都抛异常
+        if(!byId.getStatus().equals(Orders.TO_BE_CONFIRMED)){
+            throw new AddressBookBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
 
         // 根据id来进行修改status的状态
         orderMapper.confirm(id);
@@ -373,14 +380,18 @@ public class OrderServiceImpl implements OrderService {
         // 查询数据
         Orders orders = orderMapper.getById(addressBookDTO.getId());
         // 1.进行判断
+        // 判断当前为不为空 如果为空就直接报错
+        if(orders == null){
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+
         //   如果不是2 直接new throws
-        if(orders.getStatus() != Orders.REFUND){
+        if(!orders.getStatus().equals(Orders.REFUND)){
             throw new AddressBookBusinessException(MessageConstant.ORDER_STATUS_ERROR);
         }
         // 2.如果是二就继续下去
         // 3.在进行数据的封装 把值写到当前的类当中
         // 在把数据的封装
-
         Orders orders1 = new Orders();
         orders1.setStatus(Orders.CANCELLED);
         orders1.setRejectionReason(addressBookDTO.getRejectionReason());
