@@ -5,6 +5,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
+import com.sky.dto.AddressBookDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.AddressBook;
@@ -328,6 +329,37 @@ public class OrderServiceImpl implements OrderService {
         // 根据id来进行修改status的状态
         orderMapper.confirm(id);
 
+    }
+    /**
+     * 拒单 rejection
+     * */
+    @Override
+    public void rejection(AddressBookDTO addressBookDTO) {
+
+        // 因为这个里面需要判断当前的程序当中要不要进行数据
+        // 的判断
+        // 只要当前待接单的时候才能拒单
+        // 所以我们要在这里进行判断
+
+        // 查询数据
+        Orders orders = orderMapper.getById(addressBookDTO.getId());
+        // 1.进行判断
+        //   如果不是2 直接new throws
+        if(orders.getStatus() != Orders.REFUND){
+            throw new AddressBookBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+        // 2.如果是二就继续下去
+        // 3.在进行数据的封装 把值写到当前的类当中
+        // 在把数据的封装
+
+        Orders orders1 = new Orders();
+        orders1.setStatus(Orders.CANCELLED);
+        orders1.setRejectionReason(addressBookDTO.getRejectionReason());
+        orders1.setId(addressBookDTO.getId());
+        orders1.setCancelTime(LocalDateTime.now());
+
+        // 4.根据当前的id来进行数据的修改操作
+        orderMapper.update(orders1);
     }
 
 

@@ -1,5 +1,6 @@
 package com.sky.service;
 
+import com.sky.dto.AddressBookDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.result.PageResult;
@@ -64,4 +65,9 @@ public interface OrderService {
      * 根据id来进行接单
      * */
     void confirm(Long id);
+
+    /**
+     * 拒单 rejection
+     * */
+    void rejection(AddressBookDTO addressBookDTO);
 }

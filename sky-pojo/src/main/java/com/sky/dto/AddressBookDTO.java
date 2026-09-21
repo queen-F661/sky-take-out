@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class AddressBookDTO {
     private Long id;
+    private String rejectionReason;
 }

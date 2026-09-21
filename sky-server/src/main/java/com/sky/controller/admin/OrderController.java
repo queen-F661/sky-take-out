@@ -74,5 +74,14 @@ public class OrderController {
         return Result.success();
     }
 
+    /**
+     * 拒单 rejection
+     * */
+    @PutMapping("/rejection")
+    public Result<Object> rejection(@RequestBody AddressBookDTO addressBookDTO){
 
+        orderService.rejection(addressBookDTO);
+
+        return Result.success();
+    }
 }

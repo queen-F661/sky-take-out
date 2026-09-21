@@ -30,9 +30,26 @@
             <if test="checkoutTime != null">
                 checkout_time = #{checkoutTime},
             </if>
+            <!-- 新增：拒单原因（商家拒单） -->
+            <if test="rejectionReason != null">
+                rejection_reason = #{rejectionReason},
+            </if>
+            <!-- 新增：取消时间（用户取消、商家拒单、商家取消订单） -->
+            <if test="cancelTime != null">
+                cancel_time = #{cancelTime},
+            </if>
+            <!-- 新增：取消原因（商家取消订单） -->
+            <if test="cancelReason != null">
+                cancel_reason = #{cancelReason},
+            </if>
+            <!-- 新增：送达时间（完成订单接口使用） -->
+            <if test="deliveryTime != null">
+                delivery_time = #{deliveryTime},
+            </if>
         </set>
         where id = #{id}
     </update>
+
     <select id="pageQuery" resultType="com.sky.entity.Orders">
         select * from orders
         <where>
