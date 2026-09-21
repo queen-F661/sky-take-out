@@ -83,6 +83,8 @@ public class OrderServiceImpl implements OrderService {
         orders.setNumber(System.currentTimeMillis() + "");
         orders.setStatus(Orders.PENDING_PAYMENT);
         orders.setPayStatus(Orders.UN_PAID);
+        orders.setAddress(addressBook.getDetail());
+
         // 下单时间就是你现在的系统时间
         orders.setOrderTime(LocalDateTime.now());
         orders.setPhone(addressBook.getPhone());
@@ -266,6 +268,28 @@ public class OrderServiceImpl implements OrderService {
 
         // 在在insert把数据放到购物车里面去
         shoppingCartMapper.insertBatch(shoppingCarts);
+    }
+
+    /**
+     * 订单条件搜索 conditionSearch
+     * */
+    @Override
+    public PageResult conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO) {
+        // 标记
+        PageHelper.startPage(ordersPageQueryDTO.getPage(),ordersPageQueryDTO.getPageSize());
+
+        // 把数据进行查询
+        // 这个就不需要当前用户了 这个是管理端的
+        Page<Orders> orders = orderMapper.conditionSearch(ordersPageQueryDTO);
+
+        // 在进行数据的拼接处理
+        long total = orders.getTotal();
+
+        PageResult pageResult = new PageResult();
+        pageResult.setTotal(total);
+        pageResult.setRecords(orders);
+
+        return pageResult;
     }
 
 

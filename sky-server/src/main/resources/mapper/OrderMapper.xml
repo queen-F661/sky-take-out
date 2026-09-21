@@ -45,4 +45,36 @@
         </where>
         order by order_time desc
     </select>
+
+    <select id="conditionSearch" resultType="com.sky.entity.Orders">
+        select * from orders
+        <where>
+            <!-- 订单号模糊查询 -->
+            <if test="number != null and number != ''">
+                and number like concat('%',#{number},'%')
+            </if>
+            <!-- 手机号模糊查询 -->
+            <if test="phone != null and phone != ''">
+                and phone like concat('%',#{phone},'%')
+            </if>
+            <!-- 用户id（用户端查询历史订单会传，商家端不传） -->
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <!-- 订单状态 -->
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <!-- 开始时间 -->
+            <if test="beginTime != null">
+                and order_time &gt;= #{beginTime}
+            </if>
+            <!-- 结束时间 -->
+            <if test="endTime != null">
+                and order_time &lt;= #{endTime}
+            </if>
+        </where>
+        order by order_time desc
+    </select>
+
 </mapper>

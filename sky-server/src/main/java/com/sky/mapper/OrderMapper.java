@@ -53,4 +53,9 @@ public interface OrderMapper {
      * */
     @Update("update orders set status = 6 where id = #{id}")
     void cancel(Long id);
+
+    /**
+     * 订单条件搜索 conditionSearch
+     * */
+    Page<Orders> conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO);
 }
