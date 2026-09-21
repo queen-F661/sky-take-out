@@ -8,6 +8,7 @@ import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.OrderService;
 import com.sky.vo.OrderPaymentVO;
+import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,5 +36,16 @@ public class OrderController {
         PageResult pageResult = orderService.conditionSearch(ordersPageQueryDTO);
 
         return Result.success(pageResult);
+    }
+
+    /**
+     * 各个状态的订单数量统计
+     * */
+    @GetMapping("/statistics")
+    public Result<OrderStatisticsVO> statistics(){
+
+        OrderStatisticsVO orderStatisticsVO = orderService.statistics();
+
+        return Result.success(orderStatisticsVO);
     }
 }

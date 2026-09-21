@@ -58,4 +58,10 @@ public interface OrderMapper {
      * 订单条件搜索 conditionSearch
      * */
     Page<Orders> conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO);
+
+    /**
+     * 根据状态太查询字段
+     * */
+    @Select("select count(*) from orders where status = #{toBeConfirmed}")
+    Integer countByStatus(Integer toBeConfirmed);
 }

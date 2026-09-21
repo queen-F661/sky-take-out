@@ -19,6 +19,7 @@ import com.sky.mapper.OrderMapper;
 import com.sky.mapper.ShoppingCartMapper;
 import com.sky.result.PageResult;
 import com.sky.service.OrderService;
+import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
 import com.sky.webSocket.WebSocketServer;
@@ -290,6 +291,31 @@ public class OrderServiceImpl implements OrderService {
         pageResult.setRecords(orders);
 
         return pageResult;
+    }
+
+    /**
+     * 各个状态的订单数量统计
+     * */
+    @Transactional
+    @Override
+    public OrderStatisticsVO statistics() {
+
+        // 因为你要传递三个
+        // 那么我要传递三个sql
+        // 待接单 status=2
+        Integer toBeConfirmed = orderMapper.countByStatus(Orders.TO_BE_CONFIRMED);
+        // 待派送 status=3
+        Integer confirmed = orderMapper.countByStatus(Orders.CONFIRMED);
+        // 派送中 status=4
+        Integer deliveryInProgress = orderMapper.countByStatus(Orders.DELIVERY_IN_PROGRESS);
+
+        // 在进行组装
+        OrderStatisticsVO orderStatisticsVO = new OrderStatisticsVO();
+        orderStatisticsVO.setToBeConfirmed(toBeConfirmed);
+        orderStatisticsVO.setConfirmed(confirmed);
+        orderStatisticsVO.setDeliveryInProgress(deliveryInProgress);
+
+        return orderStatisticsVO;
     }
 
 
