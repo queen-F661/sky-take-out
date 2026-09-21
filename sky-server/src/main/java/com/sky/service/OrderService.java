@@ -37,4 +37,9 @@ public interface OrderService {
      * 查询订单详情
      * */
     OrderVO detail(Long id);
+
+    /**
+     * 取消订单
+     * */
+    void cancel(Long id);
 }

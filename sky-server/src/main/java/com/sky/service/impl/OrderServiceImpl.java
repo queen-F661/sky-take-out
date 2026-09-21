@@ -230,5 +230,15 @@ public class OrderServiceImpl implements OrderService {
         return orderVO;
     }
 
+    /**
+     * 取消订单
+     * */
+    @Override
+    public void cancel(Long id) {
+
+        orderMapper.cancel(id);
+
+    }
+
 
 }
