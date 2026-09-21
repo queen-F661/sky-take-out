@@ -208,5 +208,27 @@ public class OrderServiceImpl implements OrderService {
         return pageResult;
     }
 
+    /**
+     * 查询订单详情
+     * */
+    @Override
+    public OrderVO detail(Long id) {
+
+        // 首先 要根据当前的id来进行查询值
+        // 但是 肯定是要在本用户里面
+        // 所以 传递二个值进行根据用户id的查询
+        Orders orders = orderMapper.getById(id);
+
+        // 在进行根据当前的地址id来查询地址明细表的数据
+        List<OrderDetail> orderDetails = orderDetailMapper.pageQuery(id);
+
+        // 在进行组装返回
+        OrderVO orderVO = new OrderVO();
+        orderVO.setOrderDetailList(orderDetails);
+        BeanUtils.copyProperties(orders,orderVO);
+
+        return orderVO;
+    }
+
 
 }

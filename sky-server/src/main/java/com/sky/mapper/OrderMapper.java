@@ -47,5 +47,4 @@ public interface OrderMapper {
      * */
     Page<Orders> pageQuery(OrdersPageQueryDTO ordersPageQueryDTO);
 
-
 }

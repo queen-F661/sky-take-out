@@ -82,4 +82,15 @@ public class OrderController {
 
         return Result.success(pageResults);
     }
+
+    /**
+     * 查询订单详情
+     * */
+    @GetMapping("/orderDetail/{id}")
+    public Result<OrderVO> detail(@PathVariable Long id){
+
+        OrderVO orderVO = orderService.detail(id);
+
+        return Result.success(orderVO);
+    }
 }
