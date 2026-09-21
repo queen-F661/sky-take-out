@@ -64,4 +64,11 @@ public interface OrderMapper {
      * */
     @Select("select count(*) from orders where status = #{toBeConfirmed}")
     Integer countByStatus(Integer toBeConfirmed);
+
+    /**
+     * 接单 confirm
+     * 根据id来进行接单
+     * */
+    @Update("update orders set status = 3 where id = #{id};")
+    void confirm(Long id);
 }

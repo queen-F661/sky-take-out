@@ -1,5 +1,6 @@
 package com.sky.controller.admin;
 
+import com.sky.dto.AddressBookDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
@@ -60,4 +61,18 @@ public class OrderController {
 
         return Result.success(orderVO);
     }
+
+    /**
+     * 接单 confirm
+     * 根据id来进行接单
+     * */
+    @PutMapping("/confirm")
+    public Result<Object> confirm(@RequestBody AddressBookDTO addressBookDTO){
+
+        orderService.confirm(addressBookDTO.getId());
+
+        return Result.success();
+    }
+
+
 }

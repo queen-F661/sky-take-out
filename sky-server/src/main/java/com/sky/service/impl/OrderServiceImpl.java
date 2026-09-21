@@ -318,5 +318,17 @@ public class OrderServiceImpl implements OrderService {
         return orderStatisticsVO;
     }
 
+    /**
+     * 接单 confirm
+     * 根据id来进行接单
+     * */
+    @Override
+    public void confirm(Long id) {
+
+        // 根据id来进行修改status的状态
+        orderMapper.confirm(id);
+
+    }
+
 
 }
