@@ -69,6 +69,9 @@ public class OrderController {
     @PutMapping("/confirm")
     public Result<Object> confirm(@RequestBody AddressBookDTO addressBookDTO){
 
+        // 这个必须是1才能进行接单
+        // 要进行判断当前 如果为1
+
         orderService.confirm(addressBookDTO.getId());
 
         return Result.success();
@@ -84,4 +87,11 @@ public class OrderController {
 
         return Result.success();
     }
+
+    /**
+     * 商家取消订单 cancel
+     * */
+//    public Result<Object> cancel(){
+//
+//    }
 }

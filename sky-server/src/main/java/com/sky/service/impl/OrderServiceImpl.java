@@ -284,12 +284,39 @@ public class OrderServiceImpl implements OrderService {
         // 这个就不需要当前用户了 这个是管理端的
         Page<Orders> orders = orderMapper.conditionSearch(ordersPageQueryDTO);
 
+        // 不用查询  直接放到当前的orderVo
+        ArrayList<OrderVO> orderVOS = new ArrayList<>();
+
+        for (Orders order : orders) {
+            OrderVO orderVO = new OrderVO();
+            BeanUtils.copyProperties(order,orderVO);
+
+            // 在把当前的明细表数据取出
+            List<OrderDetail> orderDetails = orderDetailMapper.pageQuery(order.getId());
+
+            orderVO.setOrderDetailList(orderDetails);
+
+            // 拼接数据
+            StringBuilder sb = new StringBuilder();
+            for (OrderDetail od : orderDetails) {
+                sb.append(od.getName())     // 菜名
+                        .append("*")
+                        .append(od.getNumber())   // 数量
+                        .append(";");
+            }
+
+            orderVO.setOrderDishes(sb.toString());
+
+            // 在把数据取出
+            orderVOS.add(orderVO);
+        }
+
         // 在进行数据的拼接处理
         long total = orders.getTotal();
 
         PageResult pageResult = new PageResult();
         pageResult.setTotal(total);
-        pageResult.setRecords(orders);
+        pageResult.setRecords(orderVOS);
 
         return pageResult;
     }
@@ -325,6 +352,8 @@ public class OrderServiceImpl implements OrderService {
      * */
     @Override
     public void confirm(Long id) {
+
+
 
         // 根据id来进行修改status的状态
         orderMapper.confirm(id);
