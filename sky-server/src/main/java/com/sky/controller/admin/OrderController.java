@@ -91,7 +91,11 @@ public class OrderController {
     /**
      * 商家取消订单 cancel
      * */
-//    public Result<Object> cancel(){
-//
-//    }
+    @PutMapping("/cancel")
+    public Result<Object> cancel(@RequestBody AddressBookDTO addressBookDTO){
+
+        orderService.admincancel(addressBookDTO);
+
+        return Result.success();
+    }
 }

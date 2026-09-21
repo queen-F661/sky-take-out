@@ -402,5 +402,32 @@ public class OrderServiceImpl implements OrderService {
         orderMapper.update(orders1);
     }
 
+    /**
+     * 商家取消订单 cancel
+     * */
+    @Override
+    public void admincancel(AddressBookDTO addressBookDTO) {
+
+        // 首先 根据传递过来的数据先把已知的数据取出
+        Orders byId = orderMapper.getById(addressBookDTO.getId());
+
+        // 在判断当前的这个为不为空
+        if(byId == null){
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+        // 早判断当前的这个status为不为3  只有当前带派送里面有这个数据
+        if(!byId.getStatus().equals(Orders.CONFIRMED)){
+            throw new AddressBookBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+        // 在进行数据的拼接数据
+        // 因为你要传递相应的值
+        byId.setRejectionReason(addressBookDTO.getCancelReason());
+        byId.setStatus(Orders.CANCELLED);
+        byId.setCancelTime(LocalDateTime.now());
+
+        // 拼接完成之后在把这个类传递给当前的mapper
+        orderMapper.update(byId);
+    }
+
 
 }

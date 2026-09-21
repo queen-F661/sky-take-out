@@ -70,4 +70,9 @@ public interface OrderService {
      * 拒单 rejection
      * */
     void rejection(AddressBookDTO addressBookDTO);
+
+    /**
+     * 商家取消订单 cancel
+     * */
+    void admincancel(AddressBookDTO addressBookDTO);
 }
