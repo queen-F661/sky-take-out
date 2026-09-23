@@ -74,7 +74,7 @@ public interface OrderMapper {
     void confirm(Long id);
     
     @Select("select sum(amount) from orders where status = 5 and checkout_time > #{begin} and checkout_time < #{end}")
-    Integer sum(HashMap<Object, Object> objectObjectHashMap);
+    Double sum(HashMap<Object, Object> objectObjectHashMap);
 
     /**
      * 更新这三个数据

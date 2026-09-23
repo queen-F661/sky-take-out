@@ -54,7 +54,7 @@ public class ReportServiceImpl implements ReportService {
         // 因为你知道当前的订单表是根据日期来进行计算
         // 这样就可以知道知道要把当前的值进行循环出来 循环出来 在根据每一天来进行计算数据
 
-        ArrayList<Integer> integers = new ArrayList<>();
+        ArrayList<Double> integers = new ArrayList<>();
         for (LocalDate localDate : localDates) {
 
             // 因为这个营业额 是要在当前的状态为已完成的状态
@@ -75,7 +75,10 @@ public class ReportServiceImpl implements ReportService {
             objectObjectHashMap.put("status",completed);
 
             // 在把值进行数据的传递
-            Integer sum = orderMapper.sum(objectObjectHashMap);
+            Double sum = orderMapper.sum(objectObjectHashMap);
+            // 如果没有值的话 那他就会传递一个空值
+            // 如果传递空职就不合理 要把空转成0
+            sum = sum == null ? 0.0 : sum;
             integers.add(sum);
         }
 
