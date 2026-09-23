@@ -112,4 +112,16 @@ public class OrderController {
 
         return Result.success();
     }
+
+    /**
+     * 完成（送达）
+     * */
+    @PutMapping("/complete/{id}")
+    public Result<Object> complete(@PathVariable Long id){
+
+        // 要使用根据id来进行数据的修改
+        orderService.complete(id);
+
+        return Result.success();
+    }
 }

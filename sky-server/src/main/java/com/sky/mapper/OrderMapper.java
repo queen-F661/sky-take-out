@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 @Mapper
@@ -71,7 +72,13 @@ public interface OrderMapper {
      * */
     @Update("update orders set status = 3 where id = #{id};")
     void confirm(Long id);
+    
+    @Select("select sum(amount) from orders where status = 5 and checkout_time > #{begin} and checkout_time < #{end}")
+    Integer sum(HashMap<Object, Object> objectObjectHashMap);
 
-
-
+    /**
+     * 更新这三个数据
+     * */
+    @Update("update orders set status = #{status} ,delivery_time = #{deliveryTime} where id = #{id}")
+    void completeUpdate(Integer status, LocalDateTime deliveryTime, Long id);
 }

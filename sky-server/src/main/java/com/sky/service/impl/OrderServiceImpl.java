@@ -463,5 +463,33 @@ public class OrderServiceImpl implements OrderService {
         orderMapper.update(byId);
     }
 
+    /**
+     * 送达（完成订单）：只有"派送中(4)"的订单才能标记为已完成
+     * */
+    @Override
+    public void complete(Long id) {
+        // 传递过来
+        // 那么我就能得到当前的数据
+        Orders byId = orderMapper.getById(id);
+
+        // 要先判断当前为不为空 如果为空,就直接报错
+        if(byId == null){
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+
+        // 判断当前唯不唯status = 4  如果为4就放过
+        if(!byId.getStatus().equals(Orders.DELIVERY_IN_PROGRESS)){
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        // 如果不为空 那么就进行数据的更新
+        // status
+        // 根据当前的id来进行修改
+        byId.setStatus(Orders.COMPLETED);
+        byId.setDeliveryTime(LocalDateTime.now());
+        // 在把状态的数据修改一下
+        orderMapper.completeUpdate(byId.getStatus(),byId.getDeliveryTime(),byId.getId());
+    }
+
 
 }

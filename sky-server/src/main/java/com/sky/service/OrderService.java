@@ -81,4 +81,9 @@ public interface OrderService {
      * 派送
      * */
     void delivery(Long id);
+
+    /**
+     * 送达
+     * */
+    void complete(Long id);
 }
