@@ -1,6 +1,7 @@
 package com.sky.mapper;
 
 import com.github.pagehelper.Page;
+import com.sky.dto.GoodsSalesDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.entity.Orders;
 import org.apache.ibatis.annotations.Mapper;
@@ -83,4 +84,9 @@ public interface OrderMapper {
     void completeUpdate(Integer status, LocalDateTime deliveryTime, Long id);
 
     Integer countValidOrder(LocalDateTime beginTime, LocalDateTime endTime, Integer status);
+
+    /**
+     * 根据当前数据传递当前菜品的销量和名称
+     * */
+    List<GoodsSalesDTO> top10(LocalDateTime beginTime, LocalDateTime endTime);
 }
