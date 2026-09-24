@@ -3,6 +3,7 @@ package com.sky.controller.admin;
 import com.sky.result.Result;
 import com.sky.service.ReportService;
 import com.sky.vo.TurnoverReportVO;
+import com.sky.vo.UserReportVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,4 +36,17 @@ public class ReportController {
         return Result.success(turnoverReportVO);
     }
 
+    /**
+     * 用户统计接口
+     * */
+    @GetMapping("/userStatistics")
+    public Result<UserReportVO> userStatistics(
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin ,
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end
+    ){
+
+        // 把当前的数据传递给mapper
+        UserReportVO userReportVO = reportService.userStatistics(begin,end);
+        return Result.success(userReportVO);
+    }
 }

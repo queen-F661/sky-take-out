@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
+import java.time.LocalDateTime;
+
 @Mapper
 public interface UserMapper {
 
@@ -23,4 +25,9 @@ public interface UserMapper {
     @Insert("insert into user(openid, name, phone, sex, id_number, avatar, create_time) " +
             "VALUES (#{openid},#{name},#{phone},#{sex},#{idNumber},#{avatar},#{createTime})")
     void openIdInsert(User user);
+
+    /**
+     * 根据数据查询条件
+     * */
+    Integer historyUser(LocalDateTime beginTime,LocalDateTime endTime);
 }

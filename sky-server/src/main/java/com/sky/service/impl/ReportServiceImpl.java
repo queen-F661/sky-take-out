@@ -1,14 +1,13 @@
 package com.sky.service.impl;
 
 import com.sky.entity.Orders;
-import com.sky.mapper.OrderDetailMapper;
 import com.sky.mapper.OrderMapper;
+import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
 import com.sky.vo.TurnoverReportVO;
-import io.swagger.models.auth.In;
+import com.sky.vo.UserReportVO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,6 +21,9 @@ public class ReportServiceImpl implements ReportService {
 
     @Autowired
     private OrderMapper orderMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      * 营业额统计
@@ -90,5 +92,68 @@ public class ReportServiceImpl implements ReportService {
                         .dateList(dateList)
                         .turnoverList(turnoverList)
                         .build();
+    }
+
+    /**
+     * 用户统计接口
+     *
+     * @return
+     *
+     */
+    @Override
+    public UserReportVO userStatistics(LocalDate begin, LocalDate end) {
+
+        // 他分为三部分
+        // 日期
+        // 跟上面的逻辑一样
+        // 已知道这个当前第一个值为begin 最后一个值
+        ArrayList<LocalDate> localDates = new ArrayList<>();
+
+        localDates.add(begin);
+
+        // 因为最后一个值为end,那么可以使用while循环进行判断当前传入的值为不为最后一个值
+        // 如果是最后一个值 那么就可以直接跳过循环
+        while(!begin.equals(end)){
+            // 这个是添加一天
+            // 在把当前的值传递给begin
+            begin = begin.plusDays(1);
+            // 在根据当前的begin来进行数据的传递 一直到最后
+            localDates.add(begin);
+        }
+
+        // 用户总量
+        // **用户总量 (totalUserList)**：**截止到这一天，系统里所有注册过的用户累计总数**
+        // 1.是根据我们传递当前的数据进行计算  应该是属于是指示剂整涨
+
+        // 创建个二个arrylist
+        ArrayList<Integer> historyUser = new ArrayList<>();
+        ArrayList<Integer> NewUser = new ArrayList<>();
+
+        // 从时间下手 每次添加一天 给一个值 第一天是计算当前的 第二次是计算二天的
+        for (LocalDate localDate : localDates) {
+            // 因为你是计算历史到你今天的数据
+            // 所以我们就可以使用
+            LocalDateTime beginTime = LocalDateTime.of(localDate, LocalTime.MIN);
+            LocalDateTime endTime = LocalDateTime.of(localDate, LocalTime.MAX);
+            //在根据这个数据来进行找当前的用户总量
+            Integer history = userMapper.historyUser(null,endTime);
+
+            history = history == null ? 0 : history;
+
+            // 这个是获取新的数据
+            Integer newUser = userMapper.historyUser(beginTime,endTime);
+
+            newUser = newUser == null ? 0 : newUser;
+
+            historyUser.add(history);
+            NewUser.add(newUser);
+        }
+
+        // 在把数据转换
+        return UserReportVO.builder()
+                .dateList(StringUtils.join(localDates,','))
+                .totalUserList(StringUtils.join(historyUser,','))
+                .newUserList(StringUtils.join(NewUser,','))
+                .build();
     }
 }
