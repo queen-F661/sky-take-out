@@ -2,6 +2,7 @@ package com.sky.controller.admin;
 
 import com.sky.result.Result;
 import com.sky.service.ReportService;
+import com.sky.vo.OrderReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +49,19 @@ public class ReportController {
         // 把当前的数据传递给mapper
         UserReportVO userReportVO = reportService.userStatistics(begin,end);
         return Result.success(userReportVO);
+    }
+
+    /**
+     * 订单统计接口
+     * */
+    @GetMapping("/ordersStatistics")
+    public Result<OrderReportVO> orderReport(
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin ,
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end
+    ){
+
+        OrderReportVO orderReportVO = reportService.orderReport(begin,end);
+
+        return Result.success(orderReportVO);
     }
 }

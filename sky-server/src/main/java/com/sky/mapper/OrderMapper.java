@@ -81,4 +81,6 @@ public interface OrderMapper {
      * */
     @Update("update orders set status = #{status} ,delivery_time = #{deliveryTime} where id = #{id}")
     void completeUpdate(Integer status, LocalDateTime deliveryTime, Long id);
+
+    Integer countValidOrder(LocalDateTime beginTime, LocalDateTime endTime, Integer status);
 }

@@ -4,6 +4,7 @@ import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
+import com.sky.vo.OrderReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
 import org.apache.commons.lang.StringUtils;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class ReportServiceImpl implements ReportService {
@@ -26,11 +28,10 @@ public class ReportServiceImpl implements ReportService {
     private UserMapper userMapper;
 
     /**
-     * 营业额统计
+     * 计算当前的时间
+     * 从当前的开始到结束 都放到一个集合当中
      * */
-    @Override
-    public TurnoverReportVO turnoverStatistics(LocalDate begin, LocalDate end) {
-
+    public List<LocalDate> beginTime(LocalDate begin,LocalDate end){
         // 首先 你要确定当前订单接口的日期
         // 这个日期是以字符串形式存在的 以逗号进行间隔
         // 可以根据当前的list存储到一个集合
@@ -50,6 +51,16 @@ public class ReportServiceImpl implements ReportService {
             // 在根据当前的begin来进行数据的传递 一直到最后
             localDates.add(begin);
         }
+        return localDates;
+    }
+
+    /**
+     * 营业额统计
+     * */
+    @Override
+    public TurnoverReportVO turnoverStatistics(LocalDate begin, LocalDate end) {
+
+        List<LocalDate> localDates = beginTime(begin, end);
         // 因为你最后一个值没有传递 所以要进行补全 所以要加上最后一个值
         // localDates.add(end);
 
@@ -103,23 +114,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public UserReportVO userStatistics(LocalDate begin, LocalDate end) {
 
-        // 他分为三部分
-        // 日期
-        // 跟上面的逻辑一样
-        // 已知道这个当前第一个值为begin 最后一个值
-        ArrayList<LocalDate> localDates = new ArrayList<>();
-
-        localDates.add(begin);
-
-        // 因为最后一个值为end,那么可以使用while循环进行判断当前传入的值为不为最后一个值
-        // 如果是最后一个值 那么就可以直接跳过循环
-        while(!begin.equals(end)){
-            // 这个是添加一天
-            // 在把当前的值传递给begin
-            begin = begin.plusDays(1);
-            // 在根据当前的begin来进行数据的传递 一直到最后
-            localDates.add(begin);
-        }
+        List<LocalDate> localDates = beginTime(begin, end);
 
         // 用户总量
         // **用户总量 (totalUserList)**：**截止到这一天，系统里所有注册过的用户累计总数**
@@ -156,4 +151,66 @@ public class ReportServiceImpl implements ReportService {
                 .newUserList(StringUtils.join(NewUser,','))
                 .build();
     }
+
+    /**
+     * 订单统计接口
+     * */
+    @Override
+    public OrderReportVO orderReport(LocalDate begin, LocalDate end) {
+
+        // 从开始到结束的时间
+        List<LocalDate> localDates = beginTime(begin, end);
+
+        // 每日订单数
+        ArrayList<Integer> orderCountList = new ArrayList<>();
+        // 每日有效订单数
+        ArrayList<Integer> validOrderCountList = new ArrayList<>();
+
+        Integer status = Orders.COMPLETED;
+        for (LocalDate localDate : localDates) {
+            //每日订单数，以逗号分隔，例如：260,210,215
+            //每日有效订单数，以逗号分隔，例如：20,21,10
+
+            // 这里面的区别就是当前的值status为不为5
+            // 在时间都是一样的 需要进行出来
+            LocalDateTime beginTime = LocalDateTime.of(localDate, LocalTime.MIN);
+            LocalDateTime endTime = LocalDateTime.of(localDate, LocalTime.MAX);
+
+
+            // 如果说是有5就是当前每日有效订单数
+            Integer history = orderMapper.countValidOrder(beginTime,endTime,status);
+            // 如果说是没有5的情况下就是每日订单数
+            Integer Count = orderMapper.countValidOrder(beginTime,endTime,null);
+
+
+
+            orderCountList.add(Count);
+            validOrderCountList.add(history);
+        }
+
+        // 循环list 把当前时间内所有的数据累加就行
+        Integer totalOrderCount = orderCountList.stream().reduce(Integer::sum).get();
+        Integer valiOrderCount = validOrderCountList.stream().reduce(Integer::sum).get();
+
+        // 订单完成率
+        Double orderCompletionRate = 0.0;
+        // 判断分母为不为0
+        // 如果为0 那么数据就会报错  所以要判断一下
+        if(totalOrderCount != 0){
+            orderCompletionRate = (double)valiOrderCount / totalOrderCount;
+        }
+
+
+        OrderReportVO build = OrderReportVO.builder()
+                .dateList(StringUtils.join(localDates, ','))
+                .orderCountList(StringUtils.join(orderCountList, ','))
+                .validOrderCountList(StringUtils.join(validOrderCountList, ','))
+                .totalOrderCount(totalOrderCount)
+                .validOrderCount(valiOrderCount)
+                .orderCompletionRate(orderCompletionRate)
+                .build();
+
+        return build;
+    }
+
 }
