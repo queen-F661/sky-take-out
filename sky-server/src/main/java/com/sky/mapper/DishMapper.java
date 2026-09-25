@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface DishMapper {
@@ -76,4 +77,9 @@ public interface DishMapper {
      * */
       @Select("select * from dish where category_id = #{categoryId} and status = #{status}")
       ArrayList<Dish> listWithFlavor(Dish dish);
+
+    /**
+     * 根据动态条件统计菜品数量（status 状态 / categoryId 分类）
+     * */
+    Integer countByMap(Map map);
 }

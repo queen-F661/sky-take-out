@@ -54,4 +54,17 @@
             </if>
         </where>
     </select>
+
+    <!-- 根据动态条件统计套餐数量：status 状态 / categoryId 分类，Map 传参 -->
+    <select id="countByMap" resultType="java.lang.Integer">
+        select count(id) from setmeal
+        <where>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.Update;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface OrderMapper {
@@ -73,7 +74,10 @@ public interface OrderMapper {
      * */
     @Update("update orders set status = 3 where id = #{id};")
     void confirm(Long id);
-    
+
+    /**
+     * 查询
+     * */
     @Select("select sum(amount) from orders where status = 5 and checkout_time > #{begin} and checkout_time < #{end}")
     Double sum(HashMap<Object, Object> objectObjectHashMap);
 
@@ -89,4 +93,14 @@ public interface OrderMapper {
      * 根据当前数据传递当前菜品的销量和名称
      * */
     List<GoodsSalesDTO> top10(LocalDateTime beginTime, LocalDateTime endTime);
+
+    /**
+     * 根据动态条件统计订单数量（begin/end 时间段 + status 状态）
+     * */
+    Integer countByMap(Map map);
+
+    /**
+     * 根据动态条件统计营业额（begin/end 时间段 + status 状态）
+     * */
+    Double sumByMap(Map map);
 }
