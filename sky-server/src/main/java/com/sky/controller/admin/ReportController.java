@@ -6,6 +6,7 @@ import com.sky.vo.OrderReportVO;
 import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
+import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -78,5 +80,16 @@ public class ReportController {
         SalesTop10ReportVO salesTop10ReportVO = reportService.top10(begin,end);
 
         return Result.success(salesTop10ReportVO);
+    }
+
+    /**
+     * 导出运营数据报表
+     * */
+    @GetMapping("/export")
+    public void export(HttpServletResponse response){
+
+        // 把这个对象传递给seervice
+        reportService.exportBusinessData(response);
+
     }
 }
